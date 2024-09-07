@@ -7,16 +7,15 @@ const initialState = {
   role: localStorage.getItem("role") || "",
   data: (() => {
     const data = localStorage.getItem("data");
-    // Check if data is not null and not the string "undefined"
     if (data && data !== "undefined") {
       try {
         return JSON.parse(data);
       } catch (e) {
         console.error("Failed to parse JSON data from localStorage", e);
-        return {}; // Return an empty object on parse error
+        return {};
       }
     }
-    return {}; // Return an empty object if data is null or "undefined"
+    return {};
   })(),
 };
 
