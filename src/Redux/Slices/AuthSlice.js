@@ -2,14 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-hot-toast";
 
 import axiosInstance from "../../Helpers/axiosInstance";
-
 const initialState = {
-  isLoggedIn: localStorage.getItem("isLoggedIn") || false,
+  isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")) || false,
   role: localStorage.getItem("role") || "",
-  data:
-    localStorage.getItem("data") != undefined
-      ? JSON.parse(localStorage.getItem("data"))
-      : {},
+  data: (() => {
+    const data = localStorage.getItem("data");
+    return data ? JSON.parse(data) : {};
+  })(),
 };
 
 export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
