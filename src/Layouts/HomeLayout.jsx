@@ -35,15 +35,12 @@ function HomeLayout({ children }) {
     e.preventDefault();
 
     const res = await dispatch(logout());
-    console.log(res);
-    console.log(res?.payload?.success);
     if (res?.payload?.success) navigate("/");
   }
 
   return (
     <div className="min-h-[80vh]">
       <div className="drawer absolute left-0 z-50 w-fit">
-        {/* Used for Input which uses id=checkbox */}
         <div className="drawer-content">
           <label htmlFor="my-drawer" className="cursor-pointer relative">
             <FiMenu

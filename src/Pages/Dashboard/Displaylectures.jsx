@@ -8,7 +8,6 @@ import {
   deleteCourseLecture,
   getCourseLectures,
 } from "../../Redux/Slices/LectureSlice";
-// import movie from "..//..//Assets/movie.mp4";
 
 function Displaylectures() {
   const navigate = useNavigate();
@@ -28,7 +27,6 @@ function Displaylectures() {
 
   useEffect(() => {
     dispatch(getCourseLectures(state._id));
-    console.log(lectures[currentVideo]?.lecture?.secure_url);
   }, []);
 
   return (

@@ -42,8 +42,7 @@ export const addCourseLecture = createAsyncThunk(
       });
       return (await response).data;
     } catch (error) {
-      // toast.error(error?.response?.data?.message);
-      toast.error("hello");
+      toast.error(error?.response?.data?.message);
     }
   }
 );
@@ -74,9 +73,7 @@ const lectureSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getCourseLectures.fulfilled, (state, action) => {
-        // console.log(action);
         state.lectures = action?.payload?.lectures;
-        console.log(state.lectures);
       })
       .addCase(addCourseLecture.fulfilled, (state, action) => {
         console.log(action);
