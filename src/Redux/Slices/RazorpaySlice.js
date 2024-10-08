@@ -73,12 +73,12 @@ export const cancelCourseBundle = createAsyncThunk(
   "/payments/cancel",
   async () => {
     try {
-      // Await the axios response before passing it to the toast
+     
       const response = await axiosInstance.post("/payments/unsubscribe");
 
-      // Using toast.promise correctly with an awaited response
+      
       toast.promise(
-        Promise.resolve(response), // Ensuring response is a promise
+        Promise.resolve(response),
         {
           loading: "Unsubscribing the bundle",
           success: (data) => {
@@ -90,29 +90,11 @@ export const cancelCourseBundle = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      throw error; // Ensure error is propagated back to handle rejection
+      toast.error(error?.response?.data?.message,"okk");
+      throw error;
     }
   }
 );
-// export const cancelCourseBundle = createAsyncThunk(
-//   "/payments/cancel",
-//   async () => {
-//     try {
-//       const response = axiosInstance.post("/payments/unsubscribe");
-//       toast.promise(response, {
-//         loading: "Unsubscribing the bundle",
-//         success: (data) => {
-//           return data?.data?.message;
-//         },
-//         error: "Failed to unsubscribe",
-//       });
-//       return (await response).data;
-//     } catch (error) {
-//       toast.error(error?.response?.data?.message);
-//     }
-//   }
-// );
 const razorpaySlice = createSlice({
   name: "razorpay",
   initialState,
