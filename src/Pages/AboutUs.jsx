@@ -59,10 +59,10 @@ import HomeLayout from "../Layouts/HomeLayout";
 function AboutUs() {
   return (
     <HomeLayout>
-      <div className="px-5 sm:px-10 lg:px-20 pt-10 sm:pt-16 lg:pt-20 flex flex-col text-white">
+      <div className="px-5 sm:px-10 lg:px-20 pt-10 sm:pt-16 lg:pt-10 flex flex-col text-white">
         {/* Main Section */}
         <div className="flex flex-col lg:flex-row items-center gap-5 lg:gap-10 mx-5 sm:mx-10">
-          <section className="lg:w-1/2 space-y-5 sm:space-y-8 lg:space-y-10 text-center lg:text-left">
+          <section className="lg:w-1/2 space-y-5 sm:space-y-8 lg:space-y-8 text-center lg:text-left">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl text-yellow-500 font-semibold">
               Affordable and Quality Education
             </h1>
