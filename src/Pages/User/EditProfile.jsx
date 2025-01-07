@@ -59,6 +59,10 @@ function EditProfile() {
 
     console.log(formData.entries().next());
 
+
+    console.log([data.userId, formData]);
+    
+
     await dispatch(updateProfile([data.userId, formData]));
 
     await dispatch(getUserData());

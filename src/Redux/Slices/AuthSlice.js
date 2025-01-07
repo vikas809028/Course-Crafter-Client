@@ -98,6 +98,8 @@ export const updateProfile = createAsyncThunk(
   async (data) => {
     try {
       const res = axiosInstance.put(`user/update/${data[0]}`, data[1]);
+      console.log("in thunk ",res);
+      
       toast.promise(res, {
         loading: "Wait! profile update in progress...",
         success: (data) => {

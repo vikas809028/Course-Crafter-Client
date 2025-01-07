@@ -90,7 +90,7 @@ export const cancelCourseBundle = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message,"okk");
+      toast.error(error?.response?.data?.message);
       throw error;
     }
   }
