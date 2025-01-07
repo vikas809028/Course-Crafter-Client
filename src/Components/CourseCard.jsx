@@ -1,42 +1,69 @@
 import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Image,
+  Text,
+  Heading,
+  VStack,
+  Stack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 
 function CourseCard({ data }) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <div
-            onClick={() => navigate("/course/description/", {state: {...data}})} 
-            className="text-white w-[22rem] h-[430px] shadow-lg rounded-lg cursor-pointer group overflow-hidden bg-zinc-700">
-            <div className="overflow-hidden">
-                <img 
-                    className="h-48 w-full rounded-tl-lg rounded-tr-lg group-hover:scale=[1,2] transition-all ease-in-out diration-300"
-                    src={data?.thumbnail?.secure_url}
-                    alt="course thumbnail"
-                />
-                <div className="p-3 space-y-1 text-white">
-                    <h2 className="text-xl font-bold text-yellow-500 line-clamp-2">
-                        {data?.title}
-                    </h2>
-                    <p className="line-clamp-2">
-                        {data?.description}
-                    </p>
-                    <p className="font-semibold">
-                        <span className="text-yellow-500 font-bold">Category : </span>
-                        {data?.category}
-                    </p>
-                    <p className="font-semibold">
-                        <span className="text-yellow-500 font-bold">Total lectures : </span>
-                        {data?.numberoflectures}
-                    </p>
-                    <p className="font-semibold">
-                        <span className="text-yellow-500 font-bold">Instructor : </span>
-                        {data?.createdBy}
-                    </p>
-                </div>
-            </div>
-
-        </div>
-    );
+  return (
+    <Box
+      onClick={() => navigate("/course/description/", { state: { ...data } })}
+      w="22rem"
+      h="430px"
+      shadow="lg"
+      rounded="lg"
+      cursor="pointer"
+      overflow="hidden"
+      bg={useColorModeValue("gray.700", "gray.900")}
+      color="white"
+      _hover={{ transform: "scale(1.02)" }}
+      transition="transform 0.2s ease-in-out"
+    >
+      <Image
+        src={data?.thumbnail?.secure_url}
+        alt="course thumbnail"
+        h="12rem"
+        w="full"
+        roundedTop="lg"
+        objectFit="cover"
+        _hover={{ transform: "scale(1.1)" }}
+        transition="transform 0.3s ease-in-out"
+      />
+      <VStack align="start" p={4} spacing={2}>
+        <Heading size="md" color="yellow.400" noOfLines={2}>
+          {data?.title}
+        </Heading>
+        <Text noOfLines={2}>{data?.description}</Text>
+        <Stack spacing={1} fontWeight="semibold">
+          <Text>
+            <Text as="span" color="yellow.400" fontWeight="bold">
+              Category:{" "}
+            </Text>
+            {data?.category}
+          </Text>
+          <Text>
+            <Text as="span" color="yellow.400" fontWeight="bold">
+              Total Lectures:{" "}
+            </Text>
+            {data?.numberoflectures}
+          </Text>
+          <Text>
+            <Text as="span" color="yellow.400" fontWeight="bold">
+              Instructor:{" "}
+            </Text>
+            {data?.createdBy}
+          </Text>
+        </Stack>
+      </VStack>
+    </Box>
+  );
 }
 
 export default CourseCard;

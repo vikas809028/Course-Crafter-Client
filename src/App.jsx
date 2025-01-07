@@ -1,7 +1,6 @@
 import "./App.css";
 
 import { Route, Routes } from "react-router-dom";
-
 import RequireAuth from "./Components/Auth/RequireAuth";
 import AboutUs from "./Pages/AboutUs";
 import Contact from "./Pages/Contact";
@@ -37,6 +36,7 @@ function App() {
           <Route path="/course/addlecture" element={<AddLecture />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Route>
+        
         <Route element={<RequireAuth allowedRoles={["ADMIN", "USER"]} />}>
           <Route path="/user/profile" element={<Profile />} />
           <Route path="/user/editprofile" element={<EditProfile />} />

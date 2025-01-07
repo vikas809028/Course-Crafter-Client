@@ -2,13 +2,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import CourseCard from "../../Components/CourseCard";
 import HomeLayout from "../../Layouts/HomeLayout";
 import { getAllCourses } from "../../Redux/Slices/CourseSlice";
 
 function CourseList() {
   const dispatch = useDispatch();
-
   const { courseData } = useSelector((state) => state.course);
 
   async function loadCourses() {
@@ -21,17 +21,24 @@ function CourseList() {
 
   return (
     <HomeLayout>
-      <div className="min-h-[90vh] pt-12 pl-20 flex flex-col gap-10 text-white">
-        <h1 className="text-center text-3xl font-semibold mb-5">
-          Explore the courses made by
-          <span className="font-bold text-yellow-500">Industry experts</span>
-        </h1>
-        <div className="mb-10 flex flex-wrap gap-14">
-          {courseData?.map((element) => {
-            return <CourseCard key={element._id} data={element} />;
-          })}
-        </div>
-      </div>
+      <Box minH="80vh" pt={12} pl={{ base: 4, md: 20 }}>
+        <Heading as="h1" textAlign="center" size="lg" mb={5}>
+          Explore the courses made by{" "}
+          <Text as="span" fontWeight="bold" color="yellow.500">
+            Industry experts
+          </Text>
+        </Heading>
+        <Flex
+          wrap="wrap"
+          gap={6}
+          justify={"center"}
+          mb={10}
+        >
+          {courseData?.map((element) => (
+            <CourseCard key={element._id} data={element} />
+          ))}
+        </Flex>
+      </Box>
     </HomeLayout>
   );
 }

@@ -99,7 +99,7 @@ function Signup() {
 
   return (
     <HomeLayout>
-      <div className="flex overflow-x-auto items-center justify-center h-[100vh]">
+      <div className="flex overflow-x-auto items-center justify-center min-h-[80vh]">
         <form
           noValidate
           onSubmit={createNewAccount}

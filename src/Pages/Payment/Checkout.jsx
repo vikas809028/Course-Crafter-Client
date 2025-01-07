@@ -1,9 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BiRupee } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Spinner,
+  Text,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react";
 import HomeLayout from "../../Layouts/HomeLayout";
 import {
   getRazorPayId,
@@ -18,6 +27,8 @@ function Checkout() {
   const subscription_id = useSelector(
     (state) => state?.razorpay?.subscription_id
   );
+  const [loading, setLoading] = useState(true);
+
   const paymentDetails = {
     razorpay_payment_id: "",
     razorpay_subscription_id: "",
@@ -26,12 +37,11 @@ function Checkout() {
 
   async function handleSubscription(e) {
     e.preventDefault();
-    console.log("key", razorpayKey);
-    console.log("id", subscription_id);
-
     if (!razorpayKey || !subscription_id) {
+      toast.error("Unable to process payment. Please try again.");
       return;
     }
+
     const options = {
       key: razorpayKey,
       subscription_id: subscription_id,
@@ -47,7 +57,7 @@ function Checkout() {
         paymentDetails.razorpay_subscription_id =
           response.razorpay_subscription_id;
 
-        toast.success("Payment successfull");
+        toast.success("Payment successful!");
 
         const res = await dispatch(verifyUserPayment(paymentDetails));
         res?.payload?.success
@@ -55,56 +65,107 @@ function Checkout() {
           : navigate("/checkout/fail");
       },
     };
+
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
   }
 
   async function load() {
-    await dispatch(getRazorPayId());
-    await dispatch(purchaseCourseBundle());
+    try {
+      await dispatch(getRazorPayId());
+      await dispatch(purchaseCourseBundle());
+    } catch (error) {
+      toast.error("Failed to load payment details. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
     load();
   }, []);
 
+  const bgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.800", "gray.200");
+  const cardBgColor = useColorModeValue("gray.50", "gray.700");
+
+  if (loading) {
+    return (
+      <Flex minH="90vh" align="center" justify="center" bg={bgColor}>
+        <Spinner size="xl" color="yellow.500" />
+      </Flex>
+    );
+  }
+
   return (
     <HomeLayout>
-      <form
-        onSubmit={handleSubscription}
-        className="min-h-[90vh] flex items-center justify-center text-white"
+      <Flex
+        minH="90vh"
+        align="center"
+        justify="center"
+        bg={bgColor}
+        color={textColor}
       >
-        <div className="w-80 h-[26rem] flex flex-col justify-center shadow-[0_0_10px_black] rounded-lg relative">
-          <h1 className="bg-yellow-500 absolute top-0 w-full text-center py-4 text-2xl font-bold rounded-tl0lg rounded-tr-lg">
+        <Box
+          bg={cardBgColor}
+          w="full"
+          maxW="md"
+          rounded="lg"
+          shadow="lg"
+          p={8}
+          position="relative"
+        >
+          <Heading
+            as="h1"
+            textAlign="center"
+            fontSize="2xl"
+            fontWeight="bold"
+            bg="yellow.500"
+            py={2}
+            roundedTop="lg"
+            color="white"
+          >
             Subscription Bundle
-          </h1>
-          <div className="px-4 space-y-5 text-center">
-            <p className="text-[17px]">
-              This purchase will allow you to access all available course of our
-              platform for{" "}
-              <span className="text-yellow-500 font-bold">
-                <br />1 Year duration
-              </span>{" "}
-              All the existing and new launched courses will be also available
-            </p>
-
-            <p className="flex items-center justify-center gap-1 text-2xl font-bold text-yellow-500">
-              <BiRupee />
-              <span>499</span> only
-            </p>
-            <div className="text-gray-200">
-              <p>100% refund on cancellation</p>
-              <p>* Terms and conditions applied *</p>
-            </div>
-            <button
-              type="submit"
-              className="bg-yellow-500 hover:bg-yellow-600 transition-all ease-in-out duration-300 absolute bottom-0 w-full left-0 text-xl font-bold rounded-bl-lg rounded-br-lg py-2"
+          </Heading>
+          <VStack spacing={6} textAlign="center" mt={4}>
+            <Text fontSize="md">
+              This purchase will allow you to access all available courses on
+              our platform for{" "}
+              <Text as="span" fontWeight="bold" color="yellow.500">
+                1 Year duration
+              </Text>
+              . All existing and newly launched courses will also be available.
+            </Text>
+            <Text
+              fontSize="2xl"
+              fontWeight="bold"
+              color="yellow.500"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              gap={1}
             >
-              Buy now
-            </button>
-          </div>
-        </div>
-      </form>
+              <BiRupee />
+              499 only
+            </Text>
+            <Text fontSize="sm" color="gray.400">
+              100% refund on cancellation
+              <br />* Terms and conditions apply *
+            </Text>
+          </VStack>
+          <Button
+            mt={8}
+            w="full"
+            colorScheme="yellow"
+            size="lg"
+            fontWeight="bold"
+            roundedBottom="lg"
+            onClick={handleSubscription}
+          >
+            Buy Now
+          </Button>
+        </Box>
+      </Flex>
     </HomeLayout>
   );
 }

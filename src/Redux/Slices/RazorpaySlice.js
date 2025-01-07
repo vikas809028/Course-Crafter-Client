@@ -29,7 +29,7 @@ export const purchaseCourseBundle = createAsyncThunk(
       console.log(response);
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      toast.error("try again");
     }
   }
 );

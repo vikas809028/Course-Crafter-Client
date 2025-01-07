@@ -2,9 +2,32 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-hot-toast";
 
 import axiosInstance from "../../Helpers/axiosInstance";
+
+import { jwtDecode } from "jwt-decode";
+
+const tokenExpired = (token) => {
+  if (!token) return true;
+
+  try {
+    const decoded = jwtDecode(token);
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decoded.exp < currentTime;
+  } catch (error) {
+    console.error("Invalid token:", error);
+    return true;
+  }
+};
+
+const setIsLoggedInInLocalStorage = (value) => {
+  localStorage.setItem("isLoggedIn", JSON.stringify(value));
+};
+
+const token = localStorage.getItem("token");
+
 const initialState = {
-  isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")) || false,
+  isLoggedIn: token && !tokenExpired(token),
   role: localStorage.getItem("role") || "",
+  token: token || undefined,
   data: (() => {
     const data = localStorage.getItem("data");
     if (data && data !== "undefined") {
@@ -18,6 +41,8 @@ const initialState = {
     return {};
   })(),
 };
+
+setIsLoggedInInLocalStorage(initialState.isLoggedIn);
 
 export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
   try {
@@ -124,6 +149,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         localStorage.setItem("data", JSON.stringify(action?.payload?.user));
         localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("token", action?.payload?.token);
         localStorage.setItem("role", action?.payload?.user?.role);
         state.isLoggedIn = true;
         state.data = action?.payload?.user;
