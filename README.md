@@ -3,7 +3,7 @@
 1. Clone the project
 
 ```
-    git clone https://github.com/vikas809028/Coursify.git
+    git clone https://github.com/vikas809028/Course-Crafter-Client.git
 ```
 
 2. Move into the directory
