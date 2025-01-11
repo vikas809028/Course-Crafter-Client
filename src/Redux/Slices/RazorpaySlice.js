@@ -108,21 +108,28 @@ const razorpaySlice = createSlice({
         state.subscription_id = action?.payload?.subscription_id;
       })
       .addCase(verifyUserPayment.fulfilled, (state, action) => {
-        console.log(action);
         toast.success(action?.payload?.message);
         state.isPaymentVerified = action?.payload?.success;
       })
       .addCase(verifyUserPayment.rejected, (state, action) => {
-        console.log(action);
-        toast.success(action?.payload?.message);
-        state.isPaymentVerified = action?.payload?.success;
+        toast.error("Payment verification failed");
+        state.isPaymentVerified = false;
       })
       .addCase(getPaymentRecord.fulfilled, (state, action) => {
         state.allPayments = action?.payload?.allPayments;
         state.finalMonths = action?.payload?.finalMonths;
         state.monthlySalesRecord = action?.payload?.monthlySalesRecord;
+      })
+      .addCase(cancelCourseBundle.fulfilled, (state, action) => {
+        toast.success("Course bundle successfully canceled");
+        state.subscription_id = ""; // Clear subscription ID
+        state.isPaymentVerified = false; // Reset payment verification
+      })
+      .addCase(cancelCourseBundle.rejected, (state, action) => {
+        toast.error("Failed to cancel the course bundle");
       });
   },
 });
+
 
 export default razorpaySlice.reducer;

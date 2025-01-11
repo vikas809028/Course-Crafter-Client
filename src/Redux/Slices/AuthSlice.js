@@ -97,7 +97,7 @@ export const updateProfile = createAsyncThunk(
   "/user/update/profile",
   async (data) => {
     try {
-      const res = axiosInstance.put(`user/update/${data[0]}`, data[1]);
+      const res = await axiosInstance.put(`user/update/${data[0]}`, data[1]);
       console.log("in thunk ",res);
       
       toast.promise(res, {

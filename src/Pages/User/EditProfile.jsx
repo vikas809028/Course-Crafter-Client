@@ -60,7 +60,7 @@ function EditProfile() {
     console.log(formData.entries().next());
 
 
-    console.log([data.userId, formData]);
+    console.log("data",[data.userId, formData]);
     
 
     await dispatch(updateProfile([data.userId, formData]));
