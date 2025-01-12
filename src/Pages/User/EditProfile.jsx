@@ -11,11 +11,12 @@ import { getUserData, updateProfile } from "../../Redux/Slices/AuthSlice";
 function EditProfile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userId = useSelector((state) => state?.auth?.data?._id);
+
   const [data, setData] = useState({
     previewImage: "",
     fullName: "",
     avatar: undefined,
-    userId: useSelector((state) => state?.auth?.data?._id),
   });
 
   function handleImageUpload(e) {
@@ -44,30 +45,33 @@ function EditProfile() {
 
   async function onFormSubmit(e) {
     e.preventDefault();
-    console.log(data);
+
     if (!data.fullName || !data.avatar) {
       toast.error("All fields are mandatory");
       return;
     }
     if (data.fullName.length < 5) {
-      toast.error("Name cannot be of less than 5 characters");
+      toast.error("Name cannot be less than 5 characters");
       return;
     }
+
     const formData = new FormData();
     formData.append("fullName", data.fullName);
     formData.append("avatar", data.avatar);
 
-    console.log(formData.entries().next());
-
-
-    console.log("data",[data.userId, formData]);
-    
-
-    await dispatch(updateProfile([data.userId, formData]));
-
-    await dispatch(getUserData());
-
-    navigate("/user/profile");
+    try {
+      const result = await dispatch(updateProfile([userId, formData]));
+      if (updateProfile.fulfilled.match(result)) {
+        await dispatch(getUserData());
+        toast.success("Profile updated successfully!");
+        navigate("/user/profile");
+      } else {
+        toast.error(result.payload || "Failed to update profile");
+      }
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      toast.error("Unexpected error occurred.");
+    }
   }
 
   return (
@@ -83,6 +87,7 @@ function EditProfile() {
               <img
                 className="w-28 h-28 rounded-full m-auto"
                 src={data.previewImage}
+                alt="Preview"
               />
             ) : (
               <BsPersonCircle className="w-28 h-28 rounded-full m-auto" />

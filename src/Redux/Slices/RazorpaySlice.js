@@ -26,7 +26,6 @@ export const purchaseCourseBundle = createAsyncThunk(
   async () => {
     try {
       const response = await axiosInstance.post("/payments/subscribe");
-      console.log(response);
       return response.data;
     } catch (error) {
       toast.error("try again");

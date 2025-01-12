@@ -6,7 +6,10 @@ import axiosInstance from "../../Helpers/axiosInstance";
 import { jwtDecode } from "jwt-decode";
 
 const tokenExpired = (token) => {
-  if (!token) return true;
+  if (!token || typeof token !== "string" || token.split(".").length !== 3) {
+    console.warn("Token is missing or invalid.");
+    return true; 
+  }
 
   try {
     const decoded = jwtDecode(token);
@@ -14,7 +17,7 @@ const tokenExpired = (token) => {
     return decoded.exp < currentTime;
   } catch (error) {
     console.error("Invalid token:", error);
-    return true;
+    return true; // Treat as expired if decoding fails
   }
 };
 
@@ -79,7 +82,6 @@ export const login = createAsyncThunk("/auth/login", async (data) => {
 export const logout = createAsyncThunk("/auth/logout", async () => {
   try {
     const res = axiosInstance.get("user/logout");
-    console.log(res);
     toast.promise(res, {
       loading: "Wait! logout in progress...",
       success: (data) => {
@@ -95,24 +97,28 @@ export const logout = createAsyncThunk("/auth/logout", async () => {
 
 export const updateProfile = createAsyncThunk(
   "/user/update/profile",
-  async (data) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const res = await axiosInstance.put(`user/update/${data[0]}`, data[1]);
-      console.log("in thunk ",res);
-      
-      toast.promise(res, {
-        loading: "Wait! profile update in progress...",
-        success: (data) => {
-          return data?.data?.message;
-        },
-        error: "Failed to update profile",
-      });
-      return (await res).data;
+      // Wrap the actual API call with toast.promise
+      const res = await toast.promise(
+        axiosInstance.put(`user/update/${data[0]}`, data[1]),
+        {
+          loading: "Wait! Profile update in progress...",
+          success: "Profile updated successfully!",
+          error: "Failed to update profile",
+        }
+      );
+
+      return res.data; // Return the response data if successful
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      const errorMessage = error?.response?.data?.message || "An error occurred.";
+      toast.error(errorMessage); // Display error message as toast
+      return rejectWithValue(errorMessage); // Reject with the error message
     }
   }
 );
+
+
 
 export const getUserData = createAsyncThunk("/user/details", async () => {
   try {
@@ -164,7 +170,6 @@ const authSlice = createSlice({
         state.role = "";
       })
       .addCase(getUserData.fulfilled, (state, action) => {
-        console.log(action.payload.user);
         if (!action?.payload?.user) return;
         localStorage.setItem("data", JSON.stringify(action?.payload?.user));
         localStorage.setItem("isLoggedIn", true);

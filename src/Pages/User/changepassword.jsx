@@ -43,10 +43,7 @@ function ChangePassword() {
       return;
     }
 
-    console.log(data);
-
     await dispatch(changePassword(data));
-
     await dispatch(getUserData());
 
     // navigate("/user/profile");
