@@ -9,7 +9,7 @@ import HomeLayout from "../Layouts/HomeLayout";
 import { motion, useInView } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
-import { getAllCourses } from "../Redux/Slices/CourseSlice";
+import { getAllCoursesOnHompage } from "../Redux/Slices/CourseSlice";
 import CourseCard from "../Components/CourseCard";
 import { ChevronsRight } from "lucide-react";
 import AudienceSection from "../Components/AudienceSection";
@@ -23,7 +23,7 @@ function HomePage() {
   const { courseData } = useSelector((state) => state.course);
 
   async function loadCourses() {
-    await dispatch(getAllCourses());
+    await dispatch(getAllCoursesOnHompage());
   }
 
   useEffect(() => {

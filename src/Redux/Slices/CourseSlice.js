@@ -22,7 +22,7 @@ export const getAllCourses = createAsyncThunk("/course/get", async () => {
   }
 });
 
-export const getAllCoursesOnHompage = createAsyncThunk("/course/get", async () => {
+export const getAllCoursesOnHompage = createAsyncThunk("/course/getOnHomepage", async () => {
   try {
     const response = axiosInstance.get("/courses");
     return (await response).data.courses;
