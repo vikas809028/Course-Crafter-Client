@@ -184,7 +184,7 @@ function HomeLayout({ children }) {
             <Flex display={"flex"} alignItems={"center"} gap={4}>
 
               {!isLoggedIn ? (
-                <Button as={Link} to="/login" colorScheme="yellow">
+                <Button as={Link} to="/login" colorScheme="blue">
                   Login
                 </Button>
               ) : (
