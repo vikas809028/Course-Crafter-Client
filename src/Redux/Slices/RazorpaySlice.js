@@ -120,9 +120,8 @@ const razorpaySlice = createSlice({
         state.monthlySalesRecord = action?.payload?.monthlySalesRecord;
       })
       .addCase(cancelCourseBundle.fulfilled, (state, action) => {
-        toast.success("Course bundle successfully canceled");
-        state.subscription_id = ""; // Clear subscription ID
-        state.isPaymentVerified = false; // Reset payment verification
+        state.subscription_id = ""; 
+        state.isPaymentVerified = false;
       })
       .addCase(cancelCourseBundle.rejected, (state, action) => {
         toast.error("Failed to cancel the course bundle");
