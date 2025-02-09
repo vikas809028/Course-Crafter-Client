@@ -10,7 +10,6 @@ import {
   Drawer,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
   useDisclosure,
   Image,
   Avatar,
@@ -28,22 +27,16 @@ import {
 import { logout } from "../Redux/Slices/AuthSlice";
 import Footer from "./Footer";
 import {
-  AiFillHome,
-  AiFillBook,
-  AiFillInfoCircle,
-  AiFillPhone,
-} from "react-icons/ai";
-import {
-  MdDashboard,
-  MdCreateNewFolder,
   MdLogout,
   MdPerson,
 } from "react-icons/md";
-import home from "../Assets/sidabaricons/home.png"
-import about from "../Assets/sidabaricons/about.png"
-import courses from "../Assets/sidabaricons/courses.png"
-import phone from "../Assets/sidabaricons/phone.png"
-import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import home from "../Assets/sidabaricons/home.png";
+import about from "../Assets/sidabaricons/about.png";
+import courses from "../Assets/sidabaricons/courses.png";
+import phone from "../Assets/sidabaricons/phone.png";
+import createcourse from "../Assets/sidabaricons/createcourse.png";
+import admindashboard from "../Assets/sidabaricons/admindashboard.png";
+import { FaArrowLeft, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 function HomeLayout({ children }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,9 +52,8 @@ function HomeLayout({ children }) {
     if (res?.payload?.success) navigate("/");
   }
 
-
   const size = useBreakpointValue({ base: "sm", md: "lg", lg: "xl" });
- 
+
   return (
     <Box minH={"100vh"} className="bg-gradient-to-r from-white to-blue-200">
       <Flex
@@ -101,62 +93,17 @@ function HomeLayout({ children }) {
               {isLoggedIn && role === "ADMIN" && (
                 <>
                   <Link to="/admin/dashboard">Admin Dashboard</Link>
-                  <Link to="/course/create">Create new course</Link>
                 </>
               )}
               {!isLoggedIn ? (
-                <Button as={Link} to="/login" colorScheme="yellow">
+                <Button as={Link} to="/login" colorScheme="blue">
                   Login
                 </Button>
               ) : (
-                <Flex direction="row" gap={4} align="center">
-                  {/* Popover for Avatar Click */}
-                  <Popover>
-                    <PopoverTrigger>
-                      <Avatar
-                        cursor="pointer"
-                        src={userData?.avatar?.secure_url}
-                        _hover={{ transform: "scale(1.1)" }}
-                      />
-                    </PopoverTrigger>
-                    <PopoverContent
-                      width="150px"
-                      bg={"white"}
-                      color="white"
-                      borderRadius="md"
-                      boxShadow="xl"
-                      outline={"none"}
-                      border={"none"}
-                    >
-                      <PopoverArrow />
-                      <PopoverCloseButton color="white" />
-                      <PopoverBody>
-                        <VStack align="stretch">
-                          <Button
-                            variant="ghost"
-                            justifyContent="flex-start"
-                            onClick={() => navigate("/user/profile")}
-                            bg="blue.600"
-                            color={"white"}
-                            _hover={{ bg: "blue.500", color: "white" }}
-                          >
-                            Profile
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            justifyContent="flex-start"
-                            onClick={handleLogout}
-                            bg="red.600"
-                            color={"white"}
-                            _hover={{ bg: "red.500", color: "white" }}
-                          >
-                            Logout
-                          </Button>
-                        </VStack>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                </Flex>
+                <Avatar
+                  src={userData?.avatar?.secure_url}
+                  _hover={{ transform: "scale(1.1)" }}
+                />
               )}
             </Flex>
           </Flex>
@@ -182,7 +129,6 @@ function HomeLayout({ children }) {
             />{" "}
             <Image loading="lazy" boxSize={"4rem"} src="/logo.svg" alt="Logo" />
             <Flex display={"flex"} alignItems={"center"} gap={4}>
-
               {!isLoggedIn ? (
                 <Button as={Link} to="/login" colorScheme="blue">
                   Login
@@ -245,19 +191,25 @@ function HomeLayout({ children }) {
       {size === "sm" && (
         <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
           <DrawerOverlay />
-          <DrawerContent
-            minW={{ xs: "100vw", sm: "60vw" }}
-            color= {"gray.800"}
-          >
-            <DrawerCloseButton
-              color={"gray.800"}
-            />
+          <DrawerContent minW={{ xs: "100vw", sm: "60vw" }} color={"gray.800"}>
+            <Flex p={4} justify="flex-start">
+              <IconButton
+                bg={"blue.400"}
+                borderRadius={"full"}
+                icon={<FaArrowLeft />}
+                onClick={onClose}
+                variant="ghost"
+                color={"white"}
+                aria-label="Close Menu"
+              />
+            </Flex>
 
             <List spacing={5} p={4}>
               <ListItem>
                 <Link to="/">
                   <Flex align="center" gap={2}>
-                    <Image src={home} boxSize={6}/> <Text className="text-xl pl-2 cursor-pointer">Home</Text>
+                    <Image src={home} boxSize={6} />{" "}
+                    <Text className="text-xl pl-2 cursor-pointer">Home</Text>
                   </Flex>
                 </Link>
               </ListItem>
@@ -267,14 +219,20 @@ function HomeLayout({ children }) {
                   <ListItem>
                     <Link to="/admin/dashboard">
                       <Flex align="center" gap={2}>
-                        <MdDashboard  color="blue" size={20} /> Admin Dashboard
+                        <Image src={admindashboard} boxSize={6} />{" "}
+                        <Text className="text-xl pl-2 cursor-pointer">
+                          Admin Dashboard
+                        </Text>
                       </Flex>
                     </Link>
                   </ListItem>
                   <ListItem>
                     <Link to="/course/create">
                       <Flex align="center" gap={2}>
-                        <MdCreateNewFolder  color="blue" size={20} /> Create new course
+                        <Image src={createcourse} boxSize={6} />{" "}
+                        <Text className="text-xl pl-2 cursor-pointer">
+                          Create Course
+                        </Text>
                       </Flex>
                     </Link>
                   </ListItem>
@@ -284,8 +242,10 @@ function HomeLayout({ children }) {
               <ListItem>
                 <Link to="/courses">
                   <Flex align="center" gap={2}>
-                  <Image src={courses} boxSize={6}/> <Text className="text-xl pl-2 cursor-pointer">All Courses</Text>
-               
+                    <Image src={courses} boxSize={6} />{" "}
+                    <Text className="text-xl pl-2 cursor-pointer">
+                      All Courses
+                    </Text>
                   </Flex>
                 </Link>
               </ListItem>
@@ -293,8 +253,8 @@ function HomeLayout({ children }) {
               <ListItem>
                 <Link to="/contact">
                   <Flex align="center" gap={2}>
-                  <Image src={phone} boxSize={6}/> <Text className="text-xl pl-2 cursor-pointer">Contact</Text>
-                   
+                    <Image src={phone} boxSize={6} />{" "}
+                    <Text className="text-xl pl-2 cursor-pointer">Contact</Text>
                   </Flex>
                 </Link>
               </ListItem>
@@ -302,59 +262,67 @@ function HomeLayout({ children }) {
               <ListItem>
                 <Link to="/about">
                   <Flex align="center" gap={2}>
-                  <Image src={about} boxSize={6}/> <Text className="text-xl pl-2 cursor-pointer">About us</Text>
+                    <Image src={about} boxSize={6} />{" "}
+                    <Text className="text-xl pl-2 cursor-pointer">
+                      About us
+                    </Text>
                   </Flex>
                 </Link>
               </ListItem>
-
-              
             </List>
             {!isLoggedIn ? (
-                
-                <Flex direction="row" mx={2} gap={4} justifyContent={"space-between"} alignItems={"center"}>
-                  <Button
-                    as={Link}
-                    to="/login"
-                    colorScheme="blue"
-                 
-                    width="full"
-                    leftIcon={<FaSignInAlt />}
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    as={Link}
-                    to="/signup"
-                    colorScheme="blue"
-                    width="full"
-                    leftIcon={<FaUserPlus />}
-                  >
-                    Signup
-                  </Button>
-                </Flex>
-             
+              <Flex
+                direction="row"
+                mx={2}
+                gap={4}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
+                <Button
+                  as={Link}
+                  to="/login"
+                  colorScheme="blue"
+                  width="full"
+                  leftIcon={<FaSignInAlt />}
+                >
+                  Login
+                </Button>
+                <Button
+                  as={Link}
+                  to="/signup"
+                  colorScheme="blue"
+                  width="full"
+                  leftIcon={<FaUserPlus />}
+                >
+                  Signup
+                </Button>
+              </Flex>
             ) : (
-              
-                <Flex direction="row" mx={2} gap={4} justifyContent={"space-between"} alignItems={"center"}>
-                  <Button
-                    as={Link}
-                    to="/user/profile"
-                    colorScheme="blue"
-                    width="full"
-                    leftIcon={<MdPerson />}
-                  >
-                    Profile
-                  </Button>
-                  <Button
-                    colorScheme="red"
-                    onClick={handleLogout}
-                    width="full"
-                    leftIcon={<MdLogout />}
-                  >
-                    Logout
-                  </Button>
-                </Flex>
-          
+              <Flex
+                direction="row"
+                mx={2}
+                gap={4}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
+                <Button
+                  as={Link}
+                  to="/user/profile"
+                  colorScheme="blue"
+                  width="full"
+                  leftIcon={<MdPerson />}
+                >
+                  Profile
+                </Button>
+                <Button
+                  colorScheme="red"
+                  onClick={handleLogout}
+                  width="full"
+                  leftIcon={<MdLogout />}
+                >
+                  Logout
+                </Button>
+              </Flex>
             )}
           </DrawerContent>
         </Drawer>

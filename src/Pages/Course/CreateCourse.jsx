@@ -1,189 +1,210 @@
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { Flex, Text, useToast } from "@chakra-ui/react";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-
-import HomeLayout from "../../Layouts/HomeLayout";
 import { createNewCourse } from "../../Redux/Slices/CourseSlice";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Textarea,
+  Image,
+  useColorModeValue,
+  IconButton,
+} from "@chakra-ui/react";
+import HomeLayout from "../../Layouts/HomeLayout";
 
 function CreateCourse() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const toast = useToast();
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const [userInput, setUserInput] = useState({
+    title: "",
+    category: "",
+    createdBy: "",
+    description: "",
+    thumbnail: null,
+    previewImage: "",
+  });
 
-    const [userInput, setUserInput] = useState({
+  const cardBg = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.800", "white");
+
+  function handleImageUpload(e) {
+    const uploadedImage = e.target.files[0];
+    if (uploadedImage) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(uploadedImage);
+      fileReader.onload = () => {
+        setUserInput((prev) => ({
+          ...prev,
+          previewImage: fileReader.result,
+          thumbnail: uploadedImage,
+        }));
+      };
+    }
+  }
+
+  function handleUserInput(e) {
+    const { name, value } = e.target;
+    setUserInput((prev) => ({ ...prev, [name]: value }));
+  }
+
+  async function onFormSubmit(e) {
+    e.preventDefault();
+    if (
+      !userInput.title ||
+      !userInput.description ||
+      !userInput.category ||
+      !userInput.thumbnail ||
+      !userInput.createdBy
+    ) {
+      toast({
+        title: "All fields are mandatory",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    const response = await dispatch(createNewCourse(userInput));
+    if (response?.payload?.success) {
+      setUserInput({
         title: "",
         category: "",
         createdBy: "",
         description: "",
         thumbnail: null,
-        previewImage: ""
-    });
-
-    function handleImageUpload(e) {
-        e.preventDefault();
-        const uploadedImage = e.target.files[0];
-        if(uploadedImage) {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(uploadedImage);
-            fileReader.addEventListener("load", function () {
-                setUserInput({
-                    ...userInput,
-                    previewImage: this.result,
-                    thumbnail: uploadedImage
-                })
-            })
-        }
+        previewImage: "",
+      });
+      navigate("/courses");
     }
+  }
 
-    function handleUserInput(e) {
-        const {name, value} = e.target;
-        setUserInput({
-            ...userInput,
-            [name]: value
-        })
-    }
+  return (
+    <HomeLayout>
+      <Flex
+        py={10}
+        className="flex justify-center items-center min-h-[81vh] lg:min-h-[76vh]"
+      >
+        <Box
+          bg={cardBg}
+          p={6}
+          rounded="xl"
+          shadow="lg"
+          width={{ base: "95%", md: "70%", lg: "50%" }}
+        >
+          <Flex className="flex items-center">
+            <IconButton
+              as={Link}
+              to="/courses"
+              bg={"blue.400"}
+              color={"white"}
+              icon={<AiOutlineArrowLeft />}
+              aria-label="Back"
+              variant="ghost"
+              borderRadius={"full"}
+            />
+            <Text
+            width={"full"}
+              className="text-center text-xl lg:text-3xl font-semibold"
+              color={textColor}
+              textAlign="center"
+            >
+              Create New Course
+            </Text>
+          </Flex>
 
-    async function onFormSubmit(e) {
-        e.preventDefault();
-
-        if(!userInput.title || !userInput.description || !userInput.category || !userInput.thumbnail || !userInput.createdBy) {
-            toast.error("All fields are mandatory");
-            return;
-        }
-
-        const response = await dispatch(createNewCourse(userInput));
-        if(response?.payload?.success) {
-            setUserInput({
-                title: "",
-                category: "",
-                createdBy: "",
-                description: "",
-                thumbnail: null,
-                previewImage: ""
-            });
-            navigate("/courses");
-        }
-    }
-
-    return (
-        <HomeLayout>
-            <div className="flex items-center justify-center min-h-[80vh]">
-                <form
-                    onSubmit={onFormSubmit}
-                    className="flex flex-col justify-center gap-5 rounded-lg p-4 text-white w-[700px] my-10 shadow-[0_0_10px_black] relative"
+          {/* Image Upload Section */}
+          <FormControl mt={4} textAlign="center">
+            <label htmlFor="image_uploads" className="cursor-pointer">
+              {userInput.previewImage ? (
+                <Image
+                  src={userInput.previewImage}
+                  alt="Course Thumbnail"
+                  borderRadius="md"
+                />
+              ) : (
+                <Box
+                  w="full"
+                  h={20}
+                  border="2px dashed gray"
+                  borderRadius="md"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
                 >
-                    
-                    <Link className="absolute top-8 text-2xl link text-accent cursor-pointer">
-                        <AiOutlineArrowLeft />
-                    </Link>
+                  Click to Upload Course Thumbnail
+                </Box>
+              )}
+            </label>
+            <Input
+              type="file"
+              id="image_uploads"
+              hidden
+              onChange={handleImageUpload}
+              accept=".jpg, .jpeg, .png"
+            />
+          </FormControl>
 
-                    <h1 className="text-center text-2xl font-bold">
-                        Create New Course
-                    </h1>
+          {/* Input Fields */}
+          <FormControl mt={4}>
+            <FormLabel>Course Title</FormLabel>
+            <Input
+              type="text"
+              name="title"
+              placeholder="Enter course title"
+              value={userInput.title}
+              onChange={handleUserInput}
+            />
+          </FormControl>
 
-                    <main className="grid grid-cols-2 gap-x-10">
-                        <div className="gap-y-6">
-                            <div>
-                                <label htmlFor="image_uploads" className="cursor-pointer">
-                                    {userInput.previewImage ? (
-                                        <img 
-                                            className="w-full h-44 m-auto border"
-                                            src={userInput.previewImage}
-                                        />
-                                    ): (
-                                        <div className="w-full h-44 m-auto flex items-center justify-center border">
-                                            <h1 className="font-bold text-lg">Upload your course thumbnail</h1>
-                                        </div>
-                                    )}
+          <FormControl mt={4}>
+            <FormLabel>Instructor Name</FormLabel>
+            <Input
+              type="text"
+              name="createdBy"
+              placeholder="Enter instructor name"
+              value={userInput.createdBy}
+              onChange={handleUserInput}
+            />
+          </FormControl>
 
-                                </label>
-                                <input 
-                                    className="hidden"
-                                    type="file"
-                                    id="image_uploads"
-                                    accept=".jpg, .jpeg, .png"
-                                    name="image_uploads"
-                                    onChange={handleImageUpload}
-                                />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <label className="text-lg font-semibold" htmlFor="title">
-                                    Course title
-                                </label>
-                                <input
-                                    required
-                                    type="text"
-                                    name="title"
-                                    id="title"
-                                    placeholder="Enter course title"
-                                    className="bg-transparent px-2 py-1 border"
-                                    value={userInput.title}
-                                    onChange={handleUserInput}
-                                />
-                            </div>
-                        </div>
+          <FormControl mt={4}>
+            <FormLabel>Category</FormLabel>
+            <Input
+              type="text"
+              name="category"
+              placeholder="Enter category"
+              value={userInput.category}
+              onChange={handleUserInput}
+            />
+          </FormControl>
 
-                        <div className="flex flex-col gap-1">
-                            <div className="flex flex-col gap-1">
-                                <label className="text-lg font-semibold" htmlFor="createdBy">
-                                    Course Instructor
-                                </label>
-                                <input
-                                    required
-                                    type="text"
-                                    name="createdBy"
-                                    id="createdBy"
-                                    placeholder="Enter course instructor"
-                                    className="bg-transparent px-2 py-1 border"
-                                    value={userInput.createdBy}
-                                    onChange={handleUserInput}
-                                />
-                            </div>
+          <FormControl mt={4}>
+            <FormLabel>Description</FormLabel>
+            <Textarea
+              name="description"
+              placeholder="Enter course description"
+              value={userInput.description}
+              onChange={handleUserInput}
+            />
+          </FormControl>
 
-                            <div className="flex flex-col gap-1">
-                                <label className="text-lg font-semibold" htmlFor="category">
-                                    Course category
-                                </label>
-                                <input
-                                    required
-                                    type="text"
-                                    name="category"
-                                    id="category"
-                                    placeholder="Enter course category"
-                                    className="bg-transparent px-2 py-1 border"
-                                    value={userInput.category}
-                                    onChange={handleUserInput}
-                                />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <label className="text-lg font-semibold" htmlFor="description">
-                                    Course description
-                                </label>
-                                <textarea
-                                    required
-                                    type="text"
-                                    name="description"
-                                    id="description"
-                                    placeholder="Enter course description"
-                                    className="bg-transparent px-2 py-1 h-24 overflow-y-scroll resize-none border"
-                                    value={userInput.description}
-                                    onChange={handleUserInput}
-                                />
-                            </div>
-                        </div>
-                    </main>
-
-                    <button type="submit" className="w-full py-2 rounded-sm font-semibold text-lg cursor-pointer bg-yellow-600 hover:bg-yellow-500 transition-all ease-in-out duration-300">
-                        Create Course
-                    </button>
-
-
-                </form>
-            </div>
-        </HomeLayout>
-    )
+          {/* Submit Button */}
+          <Button mt={6} colorScheme="blue" width="full" onClick={onFormSubmit}>
+            Create Course
+          </Button>
+        </Box>
+      </Flex>
+    </HomeLayout>
+  );
 }
 
 export default CreateCourse;

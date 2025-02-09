@@ -1,17 +1,30 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { AiOutlineArrowLeft } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-
-import HomeLayout from "../../Layouts/HomeLayout";
 import { addCourseLecture } from "../../Redux/Slices/LectureSlice";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Textarea,
+  VStack,
+  IconButton,
+  useToast,
+  AspectRatio,
+  Flex,
+} from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import HomeLayout from "../../Layouts/HomeLayout";
 
 function AddLecture() {
   const courseDetails = useLocation().state;
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [userInput, setUserInput] = useState({
     id: courseDetails?._id,
@@ -23,26 +36,27 @@ function AddLecture() {
 
   function handleInputChange(e) {
     const { name, value } = e.target;
-    setUserInput({
-      ...userInput,
-      [name]: value,
-    });
+    setUserInput({ ...userInput, [name]: value });
   }
 
   function handleVideo(e) {
     const video = e.target.files[0];
-    const source = window.URL.createObjectURL(video);
-    setUserInput({
-      ...userInput,
-      lecture: video,
-      videoSrc: source,
-    });
+    if (video) {
+      const source = URL.createObjectURL(video);
+      setUserInput({ ...userInput, lecture: video, videoSrc: source });
+    }
   }
 
   async function onFormSubmit(e) {
     e.preventDefault();
     if (!userInput.lecture || !userInput.title || !userInput.description) {
-      toast.error("All fields are mandatory");
+      toast({
+        title: "Error",
+        description: "All fields are mandatory",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
     const response = await dispatch(addCourseLecture(userInput));
@@ -64,72 +78,71 @@ function AddLecture() {
 
   return (
     <HomeLayout>
-      <div className="min-h-[80vh] text-white flex flex-col items-center justify-center gap-10 mx-16">
-        <div className="flex flex-col gap-5 p-2 shadow-[0_0_10px_black] w-96 rounded-lg">
-          <header className="flex items-center justify-center relative">
-            <button
-              className="absolute left-2 text-xl text-green-500"
-              onClick={() => navigate(-1)}
-            >
-              <AiOutlineArrowLeft />
-            </button>
-            <h1 className="text-xl text-yellow-500 font-semibold">
-              Add new lecture
-            </h1>
-          </header>
-          <form onSubmit={onFormSubmit} className="flex flex-col gap-3">
-            <input
-              type="text"
-              name="title"
-              placeholder="enter the title of the lecture"
-              onChange={handleInputChange}
-              className="bg-transparent px-3 py-1 border"
-              value={userInput.title}
-            />
-            <textarea
-              type="text"
-              name="description"
-              placeholder="enter the description of the lecture"
-              onChange={handleInputChange}
-              className="bg-transparent px-3 py-1 border resize-none overflow-y-scroll h-36"
-              value={userInput.description}
-            />
+      <Flex className="flex justify-center items-center min-h-[81vh] lg:min-h-[76vh]">
+      <VStack p={{base:4,md:8}} bg={"white"} boxShadow={"lg"} borderRadius={"lg"} spacing={6} align="stretch">
+        <Box  display="flex" alignItems="center">
+          <IconButton
+            icon={<ArrowBackIcon />}
+            onClick={() => navigate(-1)}
+            aria-label="Back"
+            colorScheme="blue"
+            borderRadius={"full"}
+          />
+          <Heading size="lg" ml={4}>
+            Add New Lecture
+          </Heading>
+        </Box>
+
+        <form onSubmit={onFormSubmit}>
+          <VStack spacing={5} align="stretch">
+            <FormControl isRequired>
+              <FormLabel>Lecture Title</FormLabel>
+              <Input
+                type="text"
+                name="title"
+                placeholder="Enter lecture title"
+                onChange={handleInputChange}
+                value={userInput.title}
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                name="description"
+                placeholder="Enter lecture description"
+                onChange={handleInputChange}
+                value={userInput.description}
+                resize="vertical"
+              />
+            </FormControl>
+
             {userInput.videoSrc ? (
-              <video
-                muted
-                src={userInput.videoSrc}
-                controls
-                controlsList="nodownload nofullscreen"
-                disablePictureInPicture
-                className="object-fill rounded-tl-lg rounded-tr-lg w-full"
-              ></video>
-            ) : (
-              <div className="h-48 border flex items-center justify-center cursor-pointer">
-                <label
-                  className="font-semibold text-cl cursor-pointer"
-                  htmlFor="lecture"
-                >
-                  Choose your video
-                </label>
-                <input
-                  type="file"
-                  className="hidden"
-                  id="lecture"
-                  name="lecture"
-                  onChange={handleVideo}
-                  accept="video/mp4 video/x-mp4 video/*"
+              <AspectRatio ratio={16 / 9}>
+                <video
+                  src={userInput.videoSrc}
+                  controls
+                  className="rounded-md"
                 />
-              </div>
+              </AspectRatio>
+            ) : (
+              <FormControl isRequired>
+                <FormLabel>Upload Video</FormLabel>
+                <Input
+                  type="file"
+                  accept="video/mp4,video/x-mp4,video/*"
+                  onChange={handleVideo}
+                />
+              </FormControl>
             )}
-            <button
-              type="submit"
-              className="btn btn-primary py-1 font-semibold text-lg"
-            >
-              Add new Lecture
-            </button>
-          </form>
-        </div>
-      </div>
+
+            <Button colorScheme="blue" type="submit" size="lg">
+              Add Lecture
+            </Button>
+          </VStack>
+        </form>
+      </VStack>
+    </Flex>
     </HomeLayout>
   );
 }

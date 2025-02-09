@@ -80,7 +80,7 @@ function CheckoutSuccess() {
       {/* 🎁 Success Modal with Goodies */}
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent bg="gray.600" minH="60vh" width="70vw" color="white" borderRadius="lg" position="relative">
+        <ModalContent bg="#5e6be6" minH="60vh" width="70vw" color="white" borderRadius="lg" position="relative">
           
           {/* Close Button (React Icon) */}
           <IconButton

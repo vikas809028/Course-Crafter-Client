@@ -53,6 +53,7 @@ function DisplayLectures() {
       title: "Lecture Deleted",
       description: "The lecture has been successfully removed.",
       status: "success",
+      position:"top",
       duration: 3000,
       isClosable: true,
     });
@@ -60,7 +61,7 @@ function DisplayLectures() {
   const size = useBreakpointValue({ base: "sm", md: "lg", lg: "xl" });
   return (
     <HomeLayout>
-      <Box className="flex flex-col my-4 min-h-[81vh] lg:min-h-[76vh]">
+      <Box className="flex flex-col my-4 min-h-[80vh] lg:min-h-[76vh]">
         <Text
           fontSize="3xl"
           fontWeight="bold"
@@ -142,7 +143,6 @@ function DisplayLectures() {
                   colorScheme="yellow"
                   size="sm"
                   mt={4}
-                  width="full"
                 >
                   + Add Lecture
                 </Button>
@@ -180,14 +180,18 @@ function DisplayLectures() {
           </Flex>
         ) : (
           role === "ADMIN" && (
-            <Button
+            <Flex justifyContent={"center"} h={"full"}>
+              <Button
               onClick={() => navigate("/course/addlecture", { state })}
-              colorScheme="yellow"
+              colorScheme="blue"
               size="lg"
-              className="mt-6"
+              className="mt-48"
+              maxWidth={"500px"}
             >
               Add new lecture
             </Button>
+            </Flex>
+            
           )
         )}
       </Box>
