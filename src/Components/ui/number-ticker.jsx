@@ -5,14 +5,14 @@ import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Text } from "@chakra-ui/react";
 
-export function NumberTicker({
+const NumberTicker = ({
   value,
   direction = "up",
   delay = 0,
   className,
   decimalPlaces = 0,
   ...props
-}) {
+}) => {
   const ref = useRef(null);
   const motionValue = useMotionValue(direction === "down" ? value : 0);
   const springValue = useSpring(motionValue, {
@@ -53,3 +53,4 @@ export function NumberTicker({
       )} m={0} p={0}>+</Text></>
   );
 }
+export default NumberTicker
