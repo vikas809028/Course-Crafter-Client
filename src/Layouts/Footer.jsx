@@ -64,7 +64,7 @@ const Footer = () => {
         </Flex>
 
         {/* Social Media Icons */}
-        <Flex px={{sm:4,md:12}} gap={4}>
+        <Flex px={{sm:4,md:12}} marginY={2} gap={4}>
           <Link
             href="https://www.instagram.com/_vikas.tiwari__?utm_source=qr&igsh=MXE2aDFudHNsbGU2eg=="
             isExternal
