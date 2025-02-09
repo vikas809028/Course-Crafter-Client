@@ -97,11 +97,10 @@ function Checkout() {
     const options = {
       key: razorpayKey,
       subscription_id: subscription_id,
-      name: "Coursify Pvt. Ltd.",
+      name: "CourseCrafter Pvt. Ltd.",
       description: "Subscription",
-      image: "./logo.svg",
       theme: {
-        color: "#F37254",
+        color: "#007BFF",
       },
       handler: async function (response) {
         const paymentDetails = {
@@ -138,7 +137,7 @@ function Checkout() {
         <Flex
           align="center"
           justify="center"
-          className="min-h-[81vh] lg:min-h-[76vh]"
+          className="min-h-[80vh] lg:min-h-[76vh]"
         >
           <Spinner size="xl" color="yellow.500" />
         </Flex>

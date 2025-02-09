@@ -23,7 +23,7 @@ function CourseDescription() {
   return (
     <HomeLayout>
       <Box
-        className="min-h-[81vh] my-4 lg:my-0 lg:min-h-[76vh]"
+        className="min-h-[81vh] my-8 lg:my-0 lg:min-h-[76vh]"
         justifyContent={"center"}
         pt={14}
         px={{ base: 4, md: 20 }}
