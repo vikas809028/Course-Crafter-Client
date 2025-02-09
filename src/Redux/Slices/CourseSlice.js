@@ -22,6 +22,15 @@ export const getAllCourses = createAsyncThunk("/course/get", async () => {
   }
 });
 
+export const getAllCoursesOnHompage = createAsyncThunk("/course/get", async () => {
+  try {
+    const response = axiosInstance.get("/courses");
+    return (await response).data.courses;
+  } catch (error) {
+    toast.error(error?.response?.data?.message);
+  }
+});
+
 export const deleteCourse = createAsyncThunk("/course/delete", async (id) => {
   try {
     const response = axiosInstance.delete(`/courses/${id}`);
@@ -70,6 +79,11 @@ const courseSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getAllCourses.fulfilled, (state, action) => {
+      if (action.payload) {
+        state.courseData = [...action.payload];
+      }
+    });
+    builder.addCase(getAllCoursesOnHompage.fulfilled, (state, action) => {
       if (action.payload) {
         state.courseData = [...action.payload];
       }
