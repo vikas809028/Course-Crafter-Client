@@ -26,10 +26,7 @@ import {
 } from "@chakra-ui/react";
 import { logout } from "../Redux/Slices/AuthSlice";
 import Footer from "./Footer";
-import {
-  MdLogout,
-  MdPerson,
-} from "react-icons/md";
+import { MdLogout, MdPerson } from "react-icons/md";
 import home from "../Assets/sidabaricons/home.png";
 import about from "../Assets/sidabaricons/about.png";
 import courses from "../Assets/sidabaricons/courses.png";
@@ -134,53 +131,12 @@ function HomeLayout({ children }) {
                   Login
                 </Button>
               ) : (
-                <Flex direction="row" gap={4} align="center">
-                  {/* Popover for Avatar Click */}
-                  <Popover>
-                    <PopoverTrigger>
-                      <Avatar
-                        cursor="pointer"
-                        size={{ base: "sm", md: "lg" }}
-                        src={userData?.avatar?.secure_url}
-                        _hover={{ transform: "scale(1.1)" }}
-                      />
-                    </PopoverTrigger>
-                    <PopoverContent
-                      width="150px"
-                      bg={"white"}
-                      color="white"
-                      borderRadius="md"
-                      boxShadow="xl"
-                    >
-                      <PopoverArrow />
-                      <PopoverCloseButton color="white" />
-                      <PopoverBody>
-                        <VStack align="stretch">
-                          <Button
-                            variant="ghost"
-                            justifyContent="flex-start"
-                            onClick={() => navigate("/user/profile")}
-                            bg="blue.600"
-                            color={"white"}
-                            _hover={{ bg: "blue.500", color: "white" }}
-                          >
-                            Profile
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            justifyContent="flex-start"
-                            onClick={handleLogout}
-                            bg="red.600"
-                            color={"white"}
-                            _hover={{ bg: "red.500", color: "white" }}
-                          >
-                            Logout
-                          </Button>
-                        </VStack>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                </Flex>
+                <Avatar
+                  cursor="pointer"
+                  size={{ base: "sm", md: "lg" }}
+                  src={userData?.avatar?.secure_url}
+                  _hover={{ transform: "scale(1.1)" }}
+                />
               )}
             </Flex>
           </Flex>
