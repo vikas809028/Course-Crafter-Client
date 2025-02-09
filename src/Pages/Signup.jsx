@@ -79,7 +79,7 @@ function Signup() {
           <Image loading="lazy"
             src={signupImage}
             boxSize={{ sm: "400px", md: "400px", lg: "550px" }}
-            objectFit={"contain"}
+            objectFit={"cover"}
             borderRadius={"full"}
           />
         </Box>
