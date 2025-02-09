@@ -99,6 +99,7 @@ function Checkout() {
       subscription_id: subscription_id,
       name: "Coursify Pvt. Ltd.",
       description: "Subscription",
+      image: "./logo.svg",
       theme: {
         color: "#F37254",
       },
@@ -114,7 +115,18 @@ function Checkout() {
           ? navigate("/checkout/success")
           : navigate("/checkout/fail");
       },
+      method: {
+        netbanking: true,
+        card: true,
+        upi: true, 
+        wallet: true,
+      },
+      upi: {
+        mode: "qr", 
+        force: true,
+      },
     };
+    
 
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
