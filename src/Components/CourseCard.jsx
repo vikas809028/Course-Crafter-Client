@@ -5,7 +5,6 @@ import {
   Text,
   VStack,
   Button,
-  useColorModeValue,
   Flex,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
@@ -13,7 +12,6 @@ import { FiArrowRight } from "react-icons/fi";
 
 function CourseCard({ data }) {
   const navigate = useNavigate();
-  const colorMode = useSelector((state) => state.theme.colorMode);
 
   return (
     <Box
@@ -24,7 +22,7 @@ function CourseCard({ data }) {
       shadow="lg"
       rounded="lg"
       cursor="pointer"
-      bg={useColorModeValue("white", "gray.800")}
+      bg="white"
       p={2}
       mx={2}
       overflow="hidden"
@@ -35,7 +33,7 @@ function CourseCard({ data }) {
     >
       {/* Image with Fixed Aspect Ratio */}
       <Box width="100%" aspectRatio={16 / 10} overflow="hidden" rounded="lg">
-        <Image
+        <Image loading="lazy"
           src={data?.thumbnail?.secure_url}
           alt="course thumbnail"
           width="100%"

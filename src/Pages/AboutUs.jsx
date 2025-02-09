@@ -1,3 +1,4 @@
+import { Image } from "@chakra-ui/react";
 import aboutMainImage from "../Assets/Images/aboutMainImage.png";
 import CarouselSlide from "../Components/CarouselSlide";
 import { celebrities } from "../Constants/CelebrityData";
@@ -5,7 +6,7 @@ import HomeLayout from "../Layouts/HomeLayout";
 function AboutUs() {
   return (
     <HomeLayout>
-      <div className="px-5 sm:px-10 lg:px-20 pt-10 sm:pt-16 lg:pt-1 flex flex-col">
+      <div className="min-h-[81vh] lg:min-h-[76vh] px-5 sm:px-10 lg:px-20 pt-10 sm:pt-16 lg:pt-1 flex flex-col">
         {/* Main Section */}
         <div className="flex flex-col lg:flex-row items-center gap-5 lg:gap-10 mx-5 sm:mx-10 my-10">
           <section className="lg:w-1/2 space-y-5 sm:space-y-8 lg:space-y-8 text-center lg:text-left">
@@ -18,7 +19,7 @@ function AboutUs() {
           </section>
 
           <div className="lg:w-1/2 mt-8 lg:mt-0">
-            <img
+            <Image loading="lazy"
               id="test1"
               style={{
                 filter: "drop-shadow(0px 10px 10px rgb(0,0,0));",
@@ -26,6 +27,7 @@ function AboutUs() {
               alt="about main image"
               className="w-full h-auto drop-shadow-2xl"
               src={aboutMainImage}
+              
             />
           </div>
         </div>

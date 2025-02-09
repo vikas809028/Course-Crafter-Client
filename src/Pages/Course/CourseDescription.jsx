@@ -23,7 +23,7 @@ function CourseDescription() {
   return (
     <HomeLayout>
       <Box
-        minH="76vh"
+        className="min-h-[81vh] lg:min-h-[76vh]"
         justifyContent={"center"}
         pt={14}
         px={{ base: 4, md: 20 }}
@@ -35,7 +35,7 @@ function CourseDescription() {
           direction={{ base: "column", lg: "row" }}
           align="center"
           justify="center"
-          mt={14}
+          my={14}
           px={{ base: 5, md: 10, lg: 20 }}
           gap={10}
         >
@@ -98,8 +98,8 @@ function CourseDescription() {
           </Box>
 
           {/* Right Side: Course Thumbnail with Floating Icons */}
-          <Box flex={1} position="relative" textAlign="center">
-            <Image
+          <Box flex={1} position="relative" borderRadius={"lg"} textAlign="center">
+            <Image loading="lazy"
               src={state?.thumbnail?.secure_url}
               alt="Course Thumbnail"
               borderRadius="lg"

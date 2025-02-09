@@ -1,7 +1,6 @@
 import { FiMenu } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { toggleColorMode } from "../Redux/Slices/ThemeSlice";
 import {
   Box,
   Button,
@@ -9,7 +8,6 @@ import {
   List,
   ListItem,
   Drawer,
-  useColorMode,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
@@ -34,7 +32,6 @@ import {
   AiFillBook,
   AiFillInfoCircle,
   AiFillPhone,
-  AiTwotoneBook,
 } from "react-icons/ai";
 import {
   MdDashboard,
@@ -42,6 +39,10 @@ import {
   MdLogout,
   MdPerson,
 } from "react-icons/md";
+import home from "../Assets/sidabaricons/home.png"
+import about from "../Assets/sidabaricons/about.png"
+import courses from "../Assets/sidabaricons/courses.png"
+import phone from "../Assets/sidabaricons/phone.png"
 import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
 function HomeLayout({ children }) {
   const dispatch = useDispatch();
@@ -58,21 +59,16 @@ function HomeLayout({ children }) {
     if (res?.payload?.success) navigate("/");
   }
 
-  const { toggleColorMode: chakraToggle } = useColorMode();
-  const colorMode = useSelector((state) => state.theme.colorMode);
 
   const size = useBreakpointValue({ base: "sm", md: "lg", lg: "xl" });
-  const handleToggle = () => {
-    chakraToggle();
-    dispatch(toggleColorMode());
-  };
+ 
   return (
     <Box minH={"100vh"} className="bg-gradient-to-r from-white to-blue-200">
       <Flex
         top={0}
         position={"sticky"}
         minH={{ sm: "5vh", lg: "10vh" }}
-        bg={colorMode === "dark" ? "gray.800" : "white"}
+        bg={"white"}
         px={4}
         zIndex={100}
         flexDirection={"row"}
@@ -82,35 +78,13 @@ function HomeLayout({ children }) {
       >
         {size !== "sm" && (
           <Flex justifyContent={"space-between"} w={"100%"} px={4}>
-            <Image boxSize={"5rem"} src="/logo.svg" alt="Logo" />
+            <Image loading="lazy" boxSize={"5rem"} src="/logo.svg" alt="Logo" />
             <Flex
               flexDirection={"row"}
               gap={{ base: 4, lg: 10 }}
               fontSize={"larger"}
               alignItems={"center"}
             >
-              {/* {colorMode === "dark" ? (
-                <Box cursor="pointer">
-                  <img
-                    src={moon}
-                    alt=""
-                    width={30}
-                    height={30}
-                    onClick={handleToggle}
-                  />
-                </Box>
-              ) : (
-                <Box cursor="pointer">
-                  <img
-                    src={sun}
-                    alt=""
-                    width={30}
-                    height={30}
-                    onClick={handleToggle}
-                  />
-                </Box>
-              )} */}
-
               <Link to="/">
                 <Text>Home</Text>
               </Link>
@@ -147,10 +121,12 @@ function HomeLayout({ children }) {
                     </PopoverTrigger>
                     <PopoverContent
                       width="150px"
-                      bg={colorMode === "dark" ? "gray.800" : "white"}
+                      bg={"white"}
                       color="white"
                       borderRadius="md"
                       boxShadow="xl"
+                      outline={"none"}
+                      border={"none"}
                     >
                       <PopoverArrow />
                       <PopoverCloseButton color="white" />
@@ -200,31 +176,12 @@ function HomeLayout({ children }) {
               size={{ base: "sm", md: "md" }}
               variant="outline"
               zIndex={2}
+              border={"1px"}
+              borderColor={"black"}
+              color={"gray.800"}
             />{" "}
-            <Image boxSize={"4rem"} src="/logo.svg" alt="Logo" />
+            <Image loading="lazy" boxSize={"4rem"} src="/logo.svg" alt="Logo" />
             <Flex display={"flex"} alignItems={"center"} gap={4}>
-              {/*               
-              {colorMode === "dark" ? (
-                <Box cursor="pointer">
-                  <img
-                    src={moon}
-                    alt=""
-                    width={30}
-                    height={30}
-                    onClick={handleToggle}
-                  />
-                </Box>
-              ) : (
-                <Box cursor="pointer">
-                  <img
-                    src={sun}
-                    alt=""
-                    width={30}
-                    height={30}
-                    onClick={handleToggle}
-                  />
-                </Box>
-              )} */}
 
               {!isLoggedIn ? (
                 <Button as={Link} to="/login" colorScheme="yellow">
@@ -244,7 +201,7 @@ function HomeLayout({ children }) {
                     </PopoverTrigger>
                     <PopoverContent
                       width="150px"
-                      bg={colorMode === "dark" ? "gray.800" : "white"}
+                      bg={"white"}
                       color="white"
                       borderRadius="md"
                       boxShadow="xl"
@@ -290,17 +247,17 @@ function HomeLayout({ children }) {
           <DrawerOverlay />
           <DrawerContent
             minW={{ xs: "100vw", sm: "60vw" }}
-            color={colorMode === "dark" ? "white " : "gray.800"}
+            color= {"gray.800"}
           >
             <DrawerCloseButton
-              color={colorMode === "dark" ? "white" : "gray.800"}
+              color={"gray.800"}
             />
 
             <List spacing={5} p={4}>
               <ListItem>
                 <Link to="/">
                   <Flex align="center" gap={2}>
-                    <AiFillHome color="blue" size={20} /> Home
+                    <Image src={home} boxSize={6}/> <Text className="text-xl pl-2 cursor-pointer">Home</Text>
                   </Flex>
                 </Link>
               </ListItem>
@@ -327,7 +284,8 @@ function HomeLayout({ children }) {
               <ListItem>
                 <Link to="/courses">
                   <Flex align="center" gap={2}>
-                    <AiFillBook  color="blue" size={20} /> All Courses
+                  <Image src={courses} boxSize={6}/> <Text className="text-xl pl-2 cursor-pointer">All Courses</Text>
+               
                   </Flex>
                 </Link>
               </ListItem>
@@ -335,7 +293,8 @@ function HomeLayout({ children }) {
               <ListItem>
                 <Link to="/contact">
                   <Flex align="center" gap={2}>
-                    <AiFillPhone /> Contact Us
+                  <Image src={phone} boxSize={6}/> <Text className="text-xl pl-2 cursor-pointer">Contact</Text>
+                   
                   </Flex>
                 </Link>
               </ListItem>
@@ -343,7 +302,7 @@ function HomeLayout({ children }) {
               <ListItem>
                 <Link to="/about">
                   <Flex align="center" gap={2}>
-                    <AiFillInfoCircle /> About Us
+                  <Image src={about} boxSize={6}/> <Text className="text-xl pl-2 cursor-pointer">About us</Text>
                   </Flex>
                 </Link>
               </ListItem>

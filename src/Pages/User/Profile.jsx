@@ -41,7 +41,7 @@ function Profile() {
           border="1px solid rgba(255, 255, 255, 0.2)"
         >
           <VStack spacing={4} textAlign="center">
-            <Image
+            <Image loading="lazy"
               src={userData?.avatar?.secure_url || "/default-avatar.jpg"}
               alt="User Avatar"
               borderRadius="full"

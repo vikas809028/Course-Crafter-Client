@@ -40,6 +40,7 @@ function HomePage() {
         gap={{ base: 5, md: 10 }}
         mx={{ base: 4, md: 16 }}
         paddingTop={4}
+        
       >
         <Box width={{ base: "100%", lg: "50%" }} textAlign="center" spacing={6}>
           <Heading
@@ -95,7 +96,7 @@ function HomePage() {
           justifyContent="center"
           marginTop={4}
         >
-          <Image alt="homepage image" src={HomePageImage} />
+          <Image loading="lazy" alt="homepage image" src={HomePageImage} />
         </Box>
       </Flex>
 
@@ -213,43 +214,43 @@ function HomePage() {
         </Text>
         <AchieversCarousel />
       </Box>
-      <section class="py-12 mt-8">
-        <div class="max-w-4xl mx-auto px-4">
-          <h2 class="text-3xl font-bold text-center mb-8">
+      <section className="py-12 mt-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-8">
             Frequently Asked Questions
           </h2>
-          <div class="space-y-4">
-            <details class="p-4 bg-white rounded-lg shadow">
-              <summary class="font-semibold cursor-pointer">
+          <div className="space-y-4">
+            <details className="p-4 bg-white rounded-lg shadow">
+              <summary className="font-semibold cursor-pointer">
                 Question 1: How can I access courses?
               </summary>
-              <p class="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-600">
                 You can buy subscription and can access all the courses across
                 the platform.
               </p>
             </details>
-            <details class="p-4 bg-white rounded-lg shadow">
-              <summary class="font-semibold cursor-pointer">
+            <details className="p-4 bg-white rounded-lg shadow">
+              <summary className="font-semibold cursor-pointer">
                 Question 2: What payment methods do you accept?
               </summary>
-              <p class="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-600">
                 We accept various payment methods, including credit cards, debit
                 cards, and online payment gateways.
               </p>
             </details>
-            <details class="p-4 bg-white rounded-lg shadow">
-              <summary class="font-semibold cursor-pointer">
+            <details className="p-4 bg-white rounded-lg shadow">
+              <summary className="font-semibold cursor-pointer">
                 Question 3: What is the validaity of subscription?
               </summary>
-              <p class="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-600">
                 Subscription is valid for one year
               </p>
             </details>
-            <details class="p-4 bg-white rounded-lg shadow">
-              <summary class="font-semibold cursor-pointer">
+            <details className="p-4 bg-white rounded-lg shadow">
+              <summary className="font-semibold cursor-pointer">
                 Question 4: Can I cancel subscription at any time?
               </summary>
-              <p class="mt-2 text-gray-600">
+              <p className="mt-2 text-gray-600">
                 Yes , But you will get refunded only if you cancel within 7 days
                 of subscription.
               </p>

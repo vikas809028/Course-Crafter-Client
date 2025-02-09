@@ -33,7 +33,7 @@ const Footer = () => {
       >
         {/* Copyright Text */}
         <Flex justifyContent={"center"}  px={{sm:4,md:8}} alignItems={"center"} gap={2}>
-          <Image src={logo} color={"white"} boxSize={75}></Image>{" "}
+          <Image loading="lazy" src={logo} color={"white"} boxSize={75}></Image>{" "}
           <Text className="text-lg lg:text-xl" fontWeight="bold" textAlign="center">
             Copyright © {year} | Vikas Tiwari
           </Text>
@@ -69,7 +69,7 @@ const Footer = () => {
             href="https://www.instagram.com/_vikas.tiwari__?utm_source=qr&igsh=MXE2aDFudHNsbGU2eg=="
             isExternal
           >
-            <Image
+            <Image loading="lazy"
               src={instagram}
               alt="Instagram"
               borderRadius="full"
@@ -77,7 +77,7 @@ const Footer = () => {
             />
           </Link>
           <Link href="https://x.com/vikas_tiwari80" isExternal>
-            <Image
+            <Image loading="lazy"
               src={twitter}
               alt="Twitter"
                boxSize="3rem"
@@ -88,7 +88,7 @@ const Footer = () => {
             href="https://www.linkedin.com/in/vikas-tiwari-62a963238"
             isExternal
           >
-            <Image
+            <Image loading="lazy"
               src={linkedin}
               alt="LinkedIn"
                boxSize="3rem"
@@ -100,7 +100,7 @@ const Footer = () => {
             href="mailto:vikastiwari809028@gmail.com?subject=Query&body=Hello%20Vikas%2C%20I%20have%20a%20question..."
             isExternal
           >
-            <Image
+            <Image loading="lazy"
               src={mail}
               alt="Mail"
               boxSize="3rem"

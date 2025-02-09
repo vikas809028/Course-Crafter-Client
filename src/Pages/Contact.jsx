@@ -70,7 +70,7 @@ function Contact() {
       >
         {/* Contact Image */}
         <Box>
-          <Image
+          <Image loading="lazy"
             src={contactImage}
             boxSize={{ sm: "400px", md: "400px", lg: "550px" }}
             objectFit={"contain"}

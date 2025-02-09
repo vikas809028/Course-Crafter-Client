@@ -60,7 +60,7 @@ function DisplayLectures() {
   const size = useBreakpointValue({ base: "sm", md: "lg", lg: "xl" });
   return (
     <HomeLayout>
-      <Box className="flex flex-col my-4">
+      <Box className="flex flex-col my-4 min-h-[81vh] lg:min-h-[76vh]">
         <Text
           fontSize="3xl"
           fontWeight="bold"

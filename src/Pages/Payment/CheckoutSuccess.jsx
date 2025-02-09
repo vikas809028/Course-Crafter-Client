@@ -115,7 +115,7 @@ function CheckoutSuccess() {
               ✅ <strong>Bonus Study Materials</strong>  
             </Text>
 
-            <Image src={congrats} alt="Congrats" mt={6} w={200} h={150} borderRadius="3xl" mx="auto" />
+            <Image loading="lazy" src={congrats} alt="Congrats" mt={6} w={200} h={150} borderRadius="3xl" mx="auto" />
           </ModalBody>
 
           <ModalFooter>

@@ -104,7 +104,7 @@ const AchieversCarousel = () => {
                 mx={2}
                 my={6}
               >
-                <Image
+                <Image loading="lazy"
                   src={achiever.image}
                   borderRadius="full"
                   objectFit="cover"

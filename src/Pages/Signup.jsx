@@ -76,7 +76,7 @@ function Signup() {
     <HomeLayout>
       <Flex className="flex flex-wrap flex-col gap-8 md:gap-4 md:flex-row py-16 lg:py-2 justify-around items-center lg:justify-around lg:min-h-[76vh] px-4">
         <Box>
-          <Image
+          <Image loading="lazy"
             src={signupImage}
             boxSize={{ sm: "400px", md: "400px", lg: "550px" }}
             objectFit={"contain"}

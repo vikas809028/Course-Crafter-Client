@@ -11,7 +11,7 @@ function CarouselSlide({ image, title, description, slideNumber, totalSlides }) 
         px="15%"
         my={8}
       >
-        <Image
+        <Image loading="lazy"
           src={image}
           boxSize="12rem"
           p={2}

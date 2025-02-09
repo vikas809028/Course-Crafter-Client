@@ -20,7 +20,7 @@ const EducationCard = ({ image, name, college, experience }) => {
       }}
     >
       <VStack spacing={4}>
-        <Image
+        <Image loading="lazy"
           src={image}
           boxSize="150px"
           objectFit="cover"
