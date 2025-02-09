@@ -21,19 +21,14 @@ function CourseList() {
 
   return (
     <HomeLayout>
-      <Box minH="80vh" pt={12} pl={{ base: 4, md: 20 }}>
+      <Box minH="76vh" pt={14} px={{ base: 4, md: 20 }}>
         <Heading as="h1" textAlign="center" size="lg" mb={5}>
           Explore the courses made by{" "}
           <Text as="span" fontWeight="bold" color="yellow.500">
             Industry experts
           </Text>
         </Heading>
-        <Flex
-          wrap="wrap"
-          gap={6}
-          justify={"center"}
-          mb={10}
-        >
+        <Flex wrap="wrap" gap={6} justify={"center"} my={10}>
           {courseData?.map((element) => (
             <CourseCard key={element._id} data={element} />
           ))}

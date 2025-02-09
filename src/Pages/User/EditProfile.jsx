@@ -51,7 +51,7 @@ function EditProfile() {
       return;
     }
     if (data.fullName.length < 5) {
-      toast.error("Name cannot be less than 5 characters");
+      toast.error("Name must be at least 5 characters long");
       return;
     }
 
@@ -76,21 +76,23 @@ function EditProfile() {
 
   return (
     <HomeLayout>
-      <div className="flex items-center justify-center h-[100vh]">
+      <div className="flex items-center justify-center min-h-[81vh] lg:min-h-[76vh]  p-4">
         <form
           onSubmit={onFormSubmit}
-          className="flex flex-col justify-center gap-5 rounded-lg p-4 text-white w-80 min-h-[26rem] shadow-[0_0_10px_black]"
+          className="flex flex-col justify-center gap-6 rounded-lg p-6 w-full max-w-md bg-white shadow-lg backdrop-blur-md border border-gray-200"
         >
-          <h1 className="text-center text-2xl font-semibold">Edit profile</h1>
-          <label className="cursor-pointer" htmlFor="image_uploads">
+          <h1 className="text-center text-3xl font-bold text-gray-800">Edit Profile</h1>
+
+          {/* Profile Image Upload */}
+          <label className="cursor-pointer flex justify-center" htmlFor="image_uploads">
             {data.previewImage ? (
               <img
-                className="w-28 h-28 rounded-full m-auto"
+                className="w-28 h-28 rounded-full border-4 border-gray-300 transition-transform transform hover:scale-105 shadow-md"
                 src={data.previewImage}
                 alt="Preview"
               />
             ) : (
-              <BsPersonCircle className="w-28 h-28 rounded-full m-auto" />
+              <BsPersonCircle className="w-28 h-28 text-gray-400" />
             )}
           </label>
           <input
@@ -101,8 +103,10 @@ function EditProfile() {
             name="image_uploads"
             accept=".jpg, .png, .svg, .jpeg"
           />
-          <div className="flex flex-col gap-1">
-            <label htmlFor="fullName" className="text-lg font-semibold">
+
+          {/* Input Field */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="fullName" className="text-lg font-medium text-gray-700">
               Full Name
             </label>
             <input
@@ -111,20 +115,24 @@ function EditProfile() {
               name="fullName"
               id="fullName"
               placeholder="Enter your name"
-              className="bg-transparent px-2 py-1 border"
+              className="bg-gray-100 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={data.fullName}
               onChange={handleInputChange}
             />
           </div>
+
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-yellow-600 hover:bg-yellow-500 transition-all ease-in-out duration-300 rounded-sm py-2 text-lg cursor-pointer"
+            className="w-full bg-blue-500 hover:bg-blue-600 transition-all duration-300 rounded-md py-2 text-lg font-semibold tracking-wide text-white shadow-md"
           >
-            Update profile
+            Update Profile
           </button>
+
+          {/* Back to Profile Link */}
           <Link to="/user/profile">
-            <p className="link text-accent cursor-pointer flex items-center justify-center w-full gap-2">
-              <AiOutlineArrowLeft /> Go back to profile
+            <p className="text-gray-600 hover:underline cursor-pointer flex items-center justify-center gap-2 text-sm">
+              <AiOutlineArrowLeft className="text-lg" /> Back to Profile
             </p>
           </Link>
         </form>

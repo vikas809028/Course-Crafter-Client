@@ -1,109 +1,198 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import {
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Box,
+  Button,
+  Flex,
+  Text,
+  useToast,
+  Divider,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import HomeLayout from "../../Layouts/HomeLayout";
 import {
   deleteCourseLecture,
   getCourseLectures,
 } from "../../Redux/Slices/LectureSlice";
+import ReactPlayer from "react-player";
 
-function Displaylectures() {
+function DisplayLectures() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const toast = useToast();
   const { state } = useLocation();
   const { lectures } = useSelector((state) => state.lecture);
   const { role } = useSelector((state) => state.auth);
 
   const [currentVideo, setCurrentVideo] = useState(0);
-
-  async function onLectureDelete(courseId, lectureId) {
-    await dispatch(deleteCourseLecture({ courseId: courseId, lectureId: lectureId }));
-    await dispatch(getCourseLectures(courseId));
-  }
+  const videoRef = useRef(null);
 
   useEffect(() => {
     dispatch(getCourseLectures(state._id));
-  }, []);
+  }, [dispatch, state._id]);
 
+  useEffect(() => {
+    if (videoRef.current && lectures.length > 0) {
+      videoRef.current.muted = true;
+      videoRef.current
+        .play()
+        .catch((error) => console.log("Autoplay failed", error));
+    }
+  }, [lectures]);
+
+  const onLectureDelete = async (courseId, lectureId) => {
+    await dispatch(deleteCourseLecture({ courseId, lectureId }));
+    await dispatch(getCourseLectures(courseId));
+    toast({
+      title: "Lecture Deleted",
+      description: "The lecture has been successfully removed.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+  const size = useBreakpointValue({ base: "sm", md: "lg", lg: "xl" });
   return (
     <HomeLayout>
-      <div className="flex flex-col gap-10 items-center justify-center min-h-[90vh] py-10 text-white mx-[5%]">
-        <div className="text-center text-2xl font-semibold text-yellow-500">
-          Course Name: {state?.title}
-        </div>
+      <Box className="flex flex-col my-4">
+        <Text
+          fontSize="3xl"
+          fontWeight="bold"
+          color="blue.400"
+          textAlign="center"
+          marginY={4}
+        >
+          Course: {state?.title}
+        </Text>
 
         {lectures && lectures.length > 0 ? (
-          <div className="flex flex-col lg:flex-row justify-center gap-10 w-full">
-            {/* Left section for playing videos and displaying course details to admin */}
-            <div className="space-y-5 w-full lg:w-[28rem] p-2 rounded-lg shadow-lg border border-gray-700 bg-gray-800">
-              <video
-                src={lectures && lectures[currentVideo]?.lecture?.secure_url}
-                className="object-fill rounded-tl-lg rounded-tr-lg w-full shadow-md"
-                controls
-                disablePictureInPicture
-                controlsList="nodownload"
-              ></video>
-              <div className="text-lg sm:text-xl p-4">
-                <h1>
-                  <span className="text-yellow-500">Title: </span>
-                  {lectures && lectures[currentVideo]?.title}
-                </h1>
-                <p>
-                  <span className="text-yellow-500">Description: </span>
-                  {lectures && lectures[currentVideo]?.description}
-                </p>
-              </div>
-            </div>
+          <Flex direction={{ base: "column", lg: "row" }} gap={2} width="full">
+            {/* Left - Accordion List */}
+            <Box className="w-full lg:w-1/4 p-4 bg-white min-h-[72h]  h-full overflow-y-auto">
+              <Text
+                fontSize="2xl"
+                fontWeight="bold"
+                color="blue.400"
+                textAlign="center"
+              >
+                Lectures
+              </Text>
+              <Divider className="my-4" />
 
-            {/* Right section for displaying the list of lectures */}
-            <ul className="w-full lg:w-[28rem] p-2 rounded-lg shadow-lg border border-gray-700 bg-gray-800 space-y-4">
-              <li className="font-semibold text-xl text-yellow-500 flex items-center justify-between">
-                <p>Lectures list</p>
-                {role === "ADMIN" && (
-                  <button
-                    onClick={() => navigate("/course/addlecture", { state: { ...state } })}
-                    className="btn-primary px-2 py-1 rounded-md font-semibold text-sm hover:bg-yellow-500 transform hover:scale-105 transition-all ease-in-out duration-300 shadow-md"
+              <Accordion allowToggle className="mt-4">
+                {lectures.map((lecture, idx) => (
+                  <AccordionItem
+                    key={lecture._id}
+                    className="my-2"
+                    border="none"
                   >
-                    Add new lecture
-                  </button>
-                )}
-              </li>
-              {lectures &&
-                lectures.map((lecture, idx) => (
-                  <li key={lecture._id} className="p-2 space-y-2">
-                    <p
-                      className="cursor-pointer hover:text-yellow-400 transform hover:scale-105 transition-all ease-in-out duration-300"
-                      onClick={() => setCurrentVideo(idx)}
-                    >
-                      <span> Lecture {idx + 1}: </span>
-                      {lecture?.title}
-                    </p>
-                    {role === "ADMIN" && (
-                      <button
-                        onClick={() => onLectureDelete(state?._id, lecture?._id)}
-                        className="btn-accent px-2 py-1 rounded-md font-semibold text-sm hover:bg-red-500 transform hover:scale-105 transition-all ease-in-out duration-300 shadow-md"
+                    <h2>
+                      <AccordionButton
+                        onClick={() => {
+                          setCurrentVideo(idx);
+                          if (videoRef.current) {
+                            videoRef.current.src =
+                              lectures[idx]?.lecture?.secure_url;
+                            videoRef.current.muted = true;
+                            videoRef.current
+                              .play()
+                              .catch((error) =>
+                                console.log("Autoplay failed", error)
+                              );
+                          }
+                        }}
+                        _expanded={{ bg: "blue.500", color: "black" }}
+                        className="rounded-md transition-all duration-300 p-2 hover:bg-gray-700"
                       >
-                        Delete lecture
-                      </button>
-                    )}
-                  </li>
+                        <Box flex="1" textAlign="left">
+                          {idx + 1}. {lecture?.title}
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={2}>
+                      <Text>{lecture?.description}</Text>
+                      {role === "ADMIN" && (
+                        <Button
+                          onClick={() =>
+                            onLectureDelete(state?._id, lecture?._id)
+                          }
+                          colorScheme="red"
+                          size="xs"
+                          mt={2}
+                        >
+                          Delete
+                        </Button>
+                      )}
+                    </AccordionPanel>
+                    <Divider className="text-gray-500" />
+                  </AccordionItem>
                 ))}
-            </ul>
-          </div>
+              </Accordion>
+
+              {role === "ADMIN" && (
+                <Button
+                  onClick={() => navigate("/course/addlecture", { state })}
+                  colorScheme="yellow"
+                  size="sm"
+                  mt={4}
+                  width="full"
+                >
+                  + Add Lecture
+                </Button>
+              )}
+            </Box>
+
+            {/* Right - Video Player */}
+            <Box className="w-full lg:w-3/4 lg:my-0">
+              <ReactPlayer
+                url={lectures[currentVideo]?.lecture?.secure_url}
+                width="100%"
+                height="100%"
+                controls
+                playing
+                muted
+                config={{
+                  file: {
+                    attributes: {
+                      controlsList: "nodownload",
+                    },
+                  },
+                }}
+              />
+              {(size === "sm" || size === "md") && (
+                <Box className="my-4 p-4">
+                  <Text className="text-xl lg:text-2xl font-bold">
+                    {lectures[currentVideo]?.title}
+                  </Text>
+                  <Text className="fone-semibold">
+                    {lectures[currentVideo]?.description}
+                  </Text>
+                </Box>
+              )}
+            </Box>
+          </Flex>
         ) : (
           role === "ADMIN" && (
-            <button
-              onClick={() => navigate("/course/addlecture", { state: { ...state } })}
-              className="btn-primary px-2 py-1 rounded-md font-semibold text-sm hover:bg-yellow-500 transform hover:scale-105 transition-all ease-in-out duration-300 shadow-md"
+            <Button
+              onClick={() => navigate("/course/addlecture", { state })}
+              colorScheme="yellow"
+              size="lg"
+              className="mt-6"
             >
               Add new lecture
-            </button>
+            </Button>
           )
         )}
-      </div>
+      </Box>
     </HomeLayout>
   );
 }
 
-export default Displaylectures;
+export default DisplayLectures;

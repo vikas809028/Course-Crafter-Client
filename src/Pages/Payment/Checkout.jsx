@@ -8,11 +8,22 @@ import {
   Button,
   Flex,
   Heading,
+  Icon,
+  Input,
   Spinner,
   Text,
-  useColorModeValue,
   VStack,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  InputGroup,
+  InputRightElement,
+  Tooltip,
 } from "@chakra-ui/react";
+import { CopyIcon } from "@chakra-ui/icons";
 import HomeLayout from "../../Layouts/HomeLayout";
 import {
   getRazorPayId,
@@ -27,12 +38,53 @@ function Checkout() {
   const subscription_id = useSelector(
     (state) => state?.razorpay?.subscription_id
   );
-  const [loading, setLoading] = useState(true);
 
-  const paymentDetails = {
-    razorpay_payment_id: "",
-    razorpay_subscription_id: "",
-    razorpay_signature: "",
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasHovered, setHasHovered] = useState(false);
+  const [couponCode, setCouponCode] = useState("SAVE3000");
+  const [enteredCoupon, setEnteredCoupon] = useState("");
+  const [price, setPrice] = useState(12999);
+  const [discountedPrice, setDiscountedPrice] = useState(12999);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        await dispatch(getRazorPayId());
+        await dispatch(purchaseCourseBundle());
+      } catch (error) {
+        toast.error("Failed to load payment details. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  const handleFirstHover = () => {
+    if (!hasHovered) {
+      setIsModalOpen(true);
+      setHasHovered(true);
+    }
+  };
+
+  const handleCopyCoupon = () => {
+    navigator.clipboard.writeText(couponCode);
+    toast.success("Coupon copied!");
+  };
+
+  const applyCoupon = () => {
+    if (enteredCoupon.trim().toUpperCase() === "SAVE3000") {
+      setDiscountedPrice(9999);
+      toast.success(
+        <div className="text-center p-2">
+          Coupon Applied! <br /> ₹3000 Discount Activated.
+        </div>
+      );
+      setEnteredCoupon("");
+    } else {
+      toast.error("Invalid Coupon Code");
+    }
   };
 
   async function handleSubscription(e) {
@@ -50,15 +102,13 @@ function Checkout() {
       theme: {
         color: "#F37254",
       },
-
       handler: async function (response) {
-        paymentDetails.razorpay_payment_id = response.razorpay_payment_id;
-        paymentDetails.razorpay_signature = response.razorpay_signature;
-        paymentDetails.razorpay_subscription_id =
-          response.razorpay_subscription_id;
-
+        const paymentDetails = {
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+          razorpay_subscription_id: response.razorpay_subscription_id,
+        };
         toast.success("Payment successful!");
-
         const res = await dispatch(verifyUserPayment(paymentDetails));
         res?.payload?.success
           ? navigate("/checkout/success")
@@ -70,100 +120,163 @@ function Checkout() {
     paymentObject.open();
   }
 
-  async function load() {
-    try {
-      await dispatch(getRazorPayId());
-      await dispatch(purchaseCourseBundle());
-    } catch (error) {
-      toast.error("Failed to load payment details. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    load();
-  }, []);
-
-  const bgColor = useColorModeValue("white", "gray.800");
-  const textColor = useColorModeValue("gray.800", "gray.200");
-  const cardBgColor = useColorModeValue("gray.50", "gray.700");
-
   if (loading) {
     return (
-      <Flex minH="90vh" align="center" justify="center" bg={bgColor}>
-        <Spinner size="xl" color="yellow.500" />
-      </Flex>
+      <HomeLayout>
+        <Flex
+          align="center"
+          justify="center"
+          className="min-h-[81vh] lg:min-h-[76vh]"
+        >
+          <Spinner size="xl" color="yellow.500" />
+        </Flex>
+      </HomeLayout>
     );
   }
 
   return (
     <HomeLayout>
       <Flex
-        minH="90vh"
         align="center"
         justify="center"
-        bg={bgColor}
-        color={textColor}
+        className="min-h-[81vh] lg:min-h-[76vh]"
+        px={4}
       >
         <Box
-          bg={cardBgColor}
+          bg="white"
+          backdropFilter="blur(10px)"
+          borderRadius="lg"
+          boxShadow="lg"
+          maxW="lg"
           w="full"
-          maxW="md"
-          rounded="lg"
-          shadow="lg"
           p={8}
+          textAlign="center"
           position="relative"
+          onMouseEnter={handleFirstHover}
         >
-          <Heading
-            as="h1"
-            textAlign="center"
-            fontSize="2xl"
-            fontWeight="bold"
-            bg="yellow.500"
-            py={2}
-            roundedTop="lg"
-            color="white"
-          >
-            Subscription Bundle
+          <Heading fontSize="3xl" fontWeight="bold">
+            🎉 Unlock All Courses
           </Heading>
-          <VStack spacing={6} textAlign="center" mt={4}>
-            <Text fontSize="md">
-              This purchase will allow you to access all available courses on
-              our platform for{" "}
-              <Text as="span" fontWeight="bold" color="yellow.500">
-                1 Year duration
+
+          <VStack spacing={5} mt={6}>
+            <Text fontSize="lg">
+              Get{" "}
+              <Text as="span" fontWeight="bold">
+                unlimited access
+              </Text>{" "}
+              to all current and future courses for 1 Year.
+            </Text>
+
+            {/* Price Display */}
+            {discountedPrice === price ? (
+              // Show only real price before applying coupon
+              <Text fontSize="3xl" fontWeight="bold" color="gray.600">
+                <Icon as={BiRupee} /> {price} Only
               </Text>
-              . All existing and newly launched courses will also be available.
-            </Text>
-            <Text
-              fontSize="2xl"
-              fontWeight="bold"
-              color="yellow.500"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              gap={1}
-            >
-              <BiRupee />
-              499 only
-            </Text>
-            <Text fontSize="sm" color="gray.400">
-              100% refund on cancellation
-              <br />* Terms and conditions apply *
+            ) : (
+              // Show both prices after applying coupon
+              <VStack spacing={1}>
+                <Text fontSize="2xl" fontWeight="bold" color="gray.600">
+                  <Icon as={BiRupee} />
+                  <Text as="s">{price}</Text>
+                </Text>
+                <Text fontSize="3xl" fontWeight="bold" color="green.400">
+                  <Icon as={BiRupee} /> {discountedPrice} Only
+                </Text>
+              </VStack>
+            )}
+
+            <Text fontSize="sm" color="gray.800">
+              ✅ Full Refund on Cancellation <br /> * Terms & Conditions Apply *
             </Text>
           </VStack>
+
+          {discountedPrice === price && (
+            <>
+              <Text
+                fontSize={{ sm: "md", md: "lg" }}
+                fontWeight="bold"
+                mt={4}
+                p={4}
+              >
+                Apply Coupon Code:
+              </Text>
+              {/* Apply Coupon Section inside Card */}
+              <Flex mt={2} p={4} borderRadius="md">
+                <InputGroup size="md">
+                  <Input
+                    placeholder="Enter coupon code"
+                    value={enteredCoupon}
+                    onChange={(e) => setEnteredCoupon(e.target.value)}
+                  />
+                </InputGroup>
+                <button
+                  onClick={applyCoupon}
+                  isDisabled={discountedPrice === 9999}
+                  className="bg-blue-600 text-white p-2 mx-2 rounded-lg box-border"
+                >
+                  Apply
+                </button>
+              </Flex>
+            </>
+          )}
+
           <Button
-            mt={8}
+            mt={6}
             w="full"
-            colorScheme="yellow"
+            colorScheme="blue"
             size="lg"
+            fontSize="xl"
             fontWeight="bold"
-            roundedBottom="lg"
+            _hover={{ transform: "scale(1.05)", transition: "0.2s" }}
             onClick={handleSubscription}
           >
             Buy Now
           </Button>
+
+          {/* Coupon Modal - Opens only on first hover */}
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            isCentered
+          >
+            <ModalOverlay backdropFilter="blur(5px)" />
+            <ModalContent
+              bg="white"
+              boxShadow="lg"
+              borderRadius="lg"
+              p={6}
+              textAlign="center"
+              maxW="sm"
+            >
+              <ModalHeader fontSize="xl" fontWeight="bold" color="blue.600">
+                🎉 Special Discount
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Text fontSize="lg" fontWeight="bold" mb={2}>
+                  Use this code for ₹3000 OFF!
+                </Text>
+
+                <InputGroup size="md">
+                  <Input value={couponCode} isReadOnly />
+                  <InputRightElement>
+                    <Tooltip label="Copy Coupon" fontSize="sm">
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          handleCopyCoupon();
+                          setIsModalOpen(false); // Close modal after copying
+                        }}
+                      >
+                        <CopyIcon />
+                      </Button>
+                    </Tooltip>
+                  </InputRightElement>
+                </InputGroup>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
         </Box>
       </Flex>
     </HomeLayout>

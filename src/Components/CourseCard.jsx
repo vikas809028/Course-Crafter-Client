@@ -3,64 +3,77 @@ import {
   Box,
   Image,
   Text,
-  Heading,
   VStack,
-  Stack,
+  Button,
   useColorModeValue,
+  Flex,
 } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
+import { FiArrowRight } from "react-icons/fi";
 
 function CourseCard({ data }) {
   const navigate = useNavigate();
+  const colorMode = useSelector((state) => state.theme.colorMode);
 
   return (
     <Box
       onClick={() => navigate("/course/description/", { state: { ...data } })}
-      w="22rem"
-      h="430px"
+      width="100%"
+      maxW="375px"
+      minH="fit-content"
       shadow="lg"
       rounded="lg"
       cursor="pointer"
+      bg={useColorModeValue("white", "gray.800")}
+      p={2}
+      mx={2}
       overflow="hidden"
-      bg={useColorModeValue("gray.700", "gray.900")}
-      color="white"
       _hover={{ transform: "scale(1.02)" }}
       transition="transform 0.2s ease-in-out"
+      display="flex"
+      flexDirection="column"
     >
-      <Image
-        src={data?.thumbnail?.secure_url}
-        alt="course thumbnail"
-        h="12rem"
-        w="full"
-        roundedTop="lg"
-        objectFit="cover"
-        _hover={{ transform: "scale(1.1)" }}
-        transition="transform 0.3s ease-in-out"
-      />
-      <VStack align="start" p={4} spacing={2}>
-        <Heading size="md" color="yellow.400" noOfLines={2}>
-          {data?.title}
-        </Heading>
-        <Text noOfLines={2}>{data?.description}</Text>
-        <Stack spacing={1} fontWeight="semibold">
-          <Text>
-            <Text as="span" color="yellow.400" fontWeight="bold">
-              Category:{" "}
-            </Text>
-            {data?.category}
-          </Text>
-          <Text>
-            <Text as="span" color="yellow.400" fontWeight="bold">
-              Total Lectures:{" "}
-            </Text>
-            {data?.numberoflectures}
-          </Text>
-          <Text>
-            <Text as="span" color="yellow.400" fontWeight="bold">
-              Instructor:{" "}
-            </Text>
-            {data?.createdBy}
-          </Text>
-        </Stack>
+      {/* Image with Fixed Aspect Ratio */}
+      <Box width="100%" aspectRatio={16 / 10} overflow="hidden" rounded="lg">
+        <Image
+          src={data?.thumbnail?.secure_url}
+          alt="course thumbnail"
+          width="100%"
+          height="100%"
+        />
+      </Box>
+
+      {/* Content Section */}
+      <VStack
+        spacing={2}
+        align="start"
+        flexGrow={1}
+        my={2}
+        px={2}
+        justifyContent="space-between"
+        width="100%"
+      >
+        <Text fontWeight="bold" fontSize="xl" py={1} noOfLines={1}>
+          {data?.category}
+        </Text>
+        <Text fontSize="md" noOfLines={3} color="gray.600">
+          {data?.description}
+        </Text>
+
+        {/* Explore Button */}
+        <Flex justify="flex-start" width="100%" mt="auto">
+          <Button
+            rightIcon={<FiArrowRight />}
+            variant="solid"
+            colorScheme="blue"
+            onClick={(e) => {
+              e.stopPropagation(); 
+              navigate("/course/description/", { state: { ...data } });
+            }}
+          >
+            Explore
+          </Button>
+        </Flex>
       </VStack>
     </Box>
   );

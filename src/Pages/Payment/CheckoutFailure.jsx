@@ -1,37 +1,59 @@
 import { RxCrossCircled } from "react-icons/rx";
 import { Link } from "react-router-dom";
-
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  Button,
+  Icon,
+  VStack,
+} from "@chakra-ui/react";
 import HomeLayout from "../../Layouts/HomeLayout";
 
 function CheckoutFailure() {
-    return (
-        <HomeLayout>
-            <div className="min-h-[90vh] flex items-center justify-center text-white">
-                <div className="w-80 h-[26rem] flex flex-col justify-center items-center shadow-[0_0_10px_black] rounded-lg relative">
-                    <h1 className="bg-red-500 absolute text-center top-0 w-full py-4 text-2xl font-bold rounded-tl-lg rounded-tr-lg">Payment failed</h1>
+  return (
+    <HomeLayout>
+      <Flex align="center" justify="center" className="min-h-[81vh] lg:min-h-[76vh]" px={4}>
+        <Box
+          bg="white"
+          backdropFilter="blur(10px)"
+          borderRadius="lg"
+          boxShadow="lg"
+          maxW="md"
+          w="full"
+          p={8}
+          textAlign="center"
+        >
+          <Heading fontSize="3xl" fontWeight="bold" color="red.500">
+            ❌ Payment Failed!
+          </Heading>
 
-                    <div className="px-4 flex flex-col items-center justify-center space-y-2">
-                        <div className="text-center space-y-2">
-                            <h2 className="text-lg font-semibold">
-                                Oops ! Your payment failed
-                            </h2>
-                            <p className="text-left">
-                                Please try again later
-                            </p>
+          <VStack spacing={4} mt={6}>
+            <Icon as={RxCrossCircled} boxSize={16} color="red.500" />
+            <Text fontSize="lg">
+              Oops! Your payment could not be processed.  
+              Please try again later.
+            </Text>
+          </VStack>
 
-                        </div>
-                        <RxCrossCircled className="text-red-500 text-5xl" />
-                    </div>
-
-                    <Link to="/checkout" className="bg-red-500 hover:bg-red-600 transition-all ease-in-out duration-300 absolute bottom-0 w-full py-2 text-xl font-semibold text-center rounded-br-lg rounded-bl-lg">
-                        <button>Try again</button>
-                    </Link>
-               
-                </div>
-
-            </div>
-        </HomeLayout>
-    )
+          <Button
+            mt={6}
+            w="full"
+            colorScheme="red"
+            size="lg"
+            fontSize="xl"
+            fontWeight="bold"
+            _hover={{ transform: "scale(1.05)", transition: "0.2s" }}
+            as={Link}
+            to="/checkout"
+          >
+            Try Again
+          </Button>
+        </Box>
+      </Flex>
+    </HomeLayout>
+  );
 }
 
 export default CheckoutFailure;

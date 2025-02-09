@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { BsPersonCircle } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
-import { isEmail, isValidPassword } from "../Helpers/regexMatcher";
 import HomeLayout from "../Layouts/HomeLayout";
 import { createAccount } from "../Redux/Slices/AuthSlice";
+import { Box, Flex, Image } from "@chakra-ui/react";
+import signupImage from "../Assets/loginImage.png"; // Replace with actual image path
+import { BsPersonCircle } from "react-icons/bs";
 
 function Signup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const [previewImage, setPreviewImage] = useState("");
 
   const [signupData, setSignupData] = useState({
@@ -31,7 +31,6 @@ function Signup() {
 
   function getImage(event) {
     event.preventDefault();
-    // getting the image
     const uploadedImage = event.target.files[0];
 
     if (uploadedImage) {
@@ -49,147 +48,136 @@ function Signup() {
 
   async function createNewAccount(event) {
     event.preventDefault();
-    if (
-      !signupData.email ||
-      !signupData.password ||
-      !signupData.fullName ||
-      !signupData.avatar
-    ) {
+    const { fullName, email, password, avatar } = signupData;
+
+    if (email || password || fullName || !avatar) {
+      toast.error("Please Upload Image");
+      return;
+    }
+    if (!email || !password || !fullName || !avatar) {
       toast.error("Please fill all the details");
       return;
     }
 
-    // checking name field length
-    if (signupData.fullName.length < 5) {
-      toast.error("Name should be atleast of 5 characters");
-      return;
-    }
-    // checking valid email
-    if (!isEmail(signupData.email)) {
-      toast.error("Invalid email id");
-      return;
-    }
-    // checking password validation
-    if (!isValidPassword(signupData.password)) {
-      toast.error(
-        "Password should be 6 - 16 character long with atleast a number and special character"
-      );
-      return;
-    }
-
     const formData = new FormData();
-    formData.append("fullName", signupData.fullName);
-    formData.append("email", signupData.email);
-    formData.append("password", signupData.password);
-    formData.append("avatar", signupData.avatar);
+    formData.append("fullName", fullName);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("avatar", avatar);
 
-    // dispatch create account action
     const response = await dispatch(createAccount(formData));
-    console.log(response);
     if (response?.payload?.success) navigate("/");
 
-    setSignupData({
-      fullName: "",
-      email: "",
-      password: "",
-      avatar: "",
-    });
+    setSignupData({ fullName: "", email: "", password: "", avatar: "" });
     setPreviewImage("");
   }
 
   return (
     <HomeLayout>
-      <div className="flex overflow-x-auto items-center justify-center min-h-[80vh]">
+      <Flex className="flex flex-wrap flex-col gap-8 md:gap-4 md:flex-row py-16 lg:py-2 justify-around items-center lg:justify-around lg:min-h-[76vh] px-4">
+        <Box>
+          <Image
+            src={signupImage}
+            boxSize={{ sm: "400px", md: "400px", lg: "550px" }}
+            objectFit={"contain"}
+            borderRadius={"full"}
+          />
+        </Box>
+
         <form
           noValidate
           onSubmit={createNewAccount}
-          className="flex flex-col justify-center gap-3 rounded-lg p-4 text-white w-96 shadow-[0_0_10px_black]"
+          className="flex flex-col gap-5 bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md"
         >
-          <h1 className="text-center text-2xl font-bold">Registration Page</h1>
+          <h1 className="text-center text-2xl lg:text-3xl font-semibold text-gray-800">
+            Signup
+          </h1>
 
+          {/* Avatar Upload */}
           <label htmlFor="image_uploads" className="cursor-pointer">
-            {previewImage ? (
-              <img
-                className="w-24 h-24 rounded-full m-auto"
-                src={previewImage}
-              />
-            ) : (
-              <BsPersonCircle className="w-24 h-24 rounded-full m-auto" />
-            )}
+            
+              <BsPersonCircle className="w-16 h-16 rounded-full text-gray-600 m-auto" />
+            
           </label>
           <input
             onChange={getImage}
             className="hidden"
             type="file"
-            name="image_uploads"
             id="image_uploads"
             accept=".jpg, .jpeg, .png, .svg"
           />
-          <div className="flex flex-col gap-1">
-            <label htmlFor="fullName" className="font-semibold">
-              {" "}
-              Name{" "}
+
+          {/* Full Name Field */}
+          <div className="flex flex-col">
+            <label htmlFor="fullName" className="text-gray-700 font-medium">
+              Full Name
             </label>
             <input
               type="text"
               required
               name="fullName"
               id="fullName"
-              placeholder="Enter your name.."
-              className="bg-transparent px-2 py-1 border"
+              placeholder="Enter your full name"
+              className="mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               onChange={handleUserInput}
               value={signupData.fullName}
             />
           </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="font-semibold">
-              {" "}
-              Email{" "}
+
+          {/* Email Field */}
+          <div className="flex flex-col">
+            <label htmlFor="email" className="text-gray-700 font-medium">
+              Email
             </label>
             <input
               type="email"
               required
               name="email"
               id="email"
-              placeholder="Enter your email.."
-              className="bg-transparent px-2 py-1 border"
+              placeholder="Enter your email"
+              className="mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               onChange={handleUserInput}
               value={signupData.email}
             />
           </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="password" className="font-semibold">
-              {" "}
-              Password{" "}
+
+          {/* Password Field */}
+          <div className="flex flex-col">
+            <label htmlFor="password" className="text-gray-700 font-medium">
+              Password
             </label>
             <input
               type="password"
               required
               name="password"
               id="password"
-              placeholder="Enter your password.."
-              className="bg-transparent px-2 py-1 border"
+              placeholder="Enter your password"
+              className="mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               onChange={handleUserInput}
               value={signupData.password}
             />
           </div>
 
+          {/* Signup Button */}
           <button
             type="submit"
-            className="mt-2 bg-yellow-600 hover:bg-yellow-500 transition-all ease-in-out duration-300 rounded-sm py-2 font-semibold text-lg cursor-pointer"
+            className="mt-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-md transition-all duration-300"
           >
-            Create account
+            Let`s Stert Journey
           </button>
 
-          <p className="text-center">
-            Already have an account ?{" "}
-            <Link to="/login" className="link text-accent cursor-pointer">
-              {" "}
+          {/* Login Link */}
+          <p className="text-center text-gray-600">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-blue-600 hover:underline font-semibold"
+            >
               Login
             </Link>
           </p>
         </form>
-      </div>
+      </Flex>
     </HomeLayout>
   );
 }

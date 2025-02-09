@@ -1,7 +1,6 @@
 import "./App.css";
 
 import { Route, Routes } from "react-router-dom";
-import RequireAuth from "./Components/Auth/RequireAuth";
 import AboutUs from "./Pages/AboutUs";
 import Contact from "./Pages/Contact";
 import CourseDescription from "./Pages/Course/CourseDescription";
@@ -20,6 +19,7 @@ import Signup from "./Pages/Signup";
 import ChangePassword from "./Pages/User/changepassword";
 import EditProfile from "./Pages/User/EditProfile";
 import Profile from "./Pages/User/Profile";
+import RequireAuth from "./Helpers/RequireAuth";
 function App() {
   return (
     <>

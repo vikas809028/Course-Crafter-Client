@@ -9,15 +9,17 @@ function CarouselSlide({ image, title, description, slideNumber, totalSlides }) 
         justify="center"
         gap={4}
         px="15%"
+        my={8}
       >
         <Image
           src={image}
-          boxSize="10rem"
+          boxSize="12rem"
+          p={2}
           borderRadius="full"
           border="2px solid"
           borderColor="gray.400"
         />
-        <Text fontSize="xl" textAlign="center">
+        <Text fontSize={{base:"md",lg:"xl"}} textAlign="center">
           {description}
         </Text>
         <Heading fontSize="2xl" fontWeight="semibold" textAlign="center">
@@ -33,7 +35,7 @@ function CarouselSlide({ image, title, description, slideNumber, totalSlides }) 
         >
           <Link
             href={`#slide${slideNumber === 1 ? totalSlides : slideNumber - 1}`}
-            className="btn btn-circle"
+            className="btn btn-circle "
           >
             ❮
           </Link>

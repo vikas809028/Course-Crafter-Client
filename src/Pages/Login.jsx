@@ -5,8 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 
 import HomeLayout from "../Layouts/HomeLayout";
 import { login } from "../Redux/Slices/AuthSlice";
+import { Box, Flex, Image } from "@chakra-ui/react";
+import loginImage from "../Assets/loginImage.png";
 
-function Signup() {
+function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -30,7 +32,7 @@ function Signup() {
       return;
     }
 
-    // dispatch create account action
+    // dispatch login action
     const response = await dispatch(login(loginData));
     if (response?.payload?.success) navigate("/");
 
@@ -42,64 +44,81 @@ function Signup() {
 
   return (
     <HomeLayout>
-      <div className="flex overflow-x-auto items-center justify-center h-[80vh]">
+      <Flex className="flex flex-wrap flex-col gap-8 md:gap-4 md:flex-row py-16 lg:py-2 justify-around items-center lg:justify-around lg:min-h-[76vh]  px-4">
+        <Box>
+          <Image
+            src={loginImage}
+            boxSize={{sm:"400px",md:"400px",lg:"550px"}}
+            objectFit={"contain"}
+            borderRadius={"full"}
+          ></Image>
+        </Box>
+
         <form
           noValidate
           onSubmit={onLogin}
-          className="flex flex-col justify-center gap-3 rounded-lg p-4 text-white w-96 shadow-[0_0_10px_black]"
+          className="flex flex-col gap-5 bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md"
         >
-          <h1 className="text-center text-2xl font-bold">Login Page</h1>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="font-semibold">
-              {" "}
-              Email{" "}
+          <h1 className="text-center text-2xl lg:text-3xl font-bold text-gray-800">
+            Login
+          </h1>
+
+          {/* Email Field */}
+          <div className="flex flex-col">
+            <label htmlFor="email" className="text-gray-700 font-medium">
+              Email
             </label>
             <input
               type="email"
               required
               name="email"
               id="email"
-              placeholder="Enter your email.."
-              className="bg-transparent px-2 py-1 border"
+              placeholder="Enter your email"
+              className="mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               onChange={handleUserInput}
               value={loginData.email}
             />
           </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="password" className="font-semibold">
-              {" "}
-              Password{" "}
+
+          {/* Password Field */}
+          <div className="flex flex-col">
+            <label htmlFor="password" className="text-gray-700 font-medium">
+              Password
             </label>
             <input
               type="password"
               required
               name="password"
               id="password"
-              placeholder="Enter your password.."
-              className="bg-transparent px-2 py-1 border"
+              placeholder="Enter your password"
+              className="mt-1 px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
               onChange={handleUserInput}
               value={loginData.password}
             />
           </div>
 
+          {/* Login Button */}
           <button
             type="submit"
-            className="mt-2 bg-yellow-600 hover:bg-yellow-500 transition-all ease-in-out duration-300 rounded-sm py-2 font-semibold text-lg cursor-pointer"
+            className="mt-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-md transition-all duration-300"
           >
             Login
           </button>
 
-          <p className="text-center">
-            Donot hanve an account ?{" "}
-            <Link to="/signup" className="link text-accent cursor-pointer">
-              {" "}
-              Signup
+          {/* Signup Link */}
+          <p className="text-center text-gray-600">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-blue-600 hover:underline font-semibold"
+            >
+              Sign Up
             </Link>
           </p>
         </form>
-      </div>
+      </Flex>
     </HomeLayout>
   );
 }
 
-export default Signup;
+export default Login;

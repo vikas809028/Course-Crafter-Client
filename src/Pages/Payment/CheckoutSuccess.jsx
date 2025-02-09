@@ -1,46 +1,132 @@
-import { useEffect } from "react";
-import { AiFillCheckCircle } from "react-icons/ai";
+import { useEffect, useState } from "react";
+import { AiFillCheckCircle, AiOutlineClose } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  Button,
+  Icon,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  VStack,
+  Image,
+  IconButton,
+} from "@chakra-ui/react";
 import HomeLayout from "../../Layouts/HomeLayout";
 import { getUserData } from "../../Redux/Slices/AuthSlice";
+import congrats from "../../Assets/congrats.gif";
 
 function CheckoutSuccess() {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        dispatch(getUserData());
-    })
+  useEffect(() => {
+    dispatch(getUserData());
+    setTimeout(() => {
+      onOpen(); // Open the modal after a delay
+      setLoading(false);
+    }, 1000);
+  }, [dispatch, onOpen]);
 
-    return (
-        <HomeLayout>
-            <div className="min-h-[80vh] flex items-center justify-center text-white">
-                <div className="w-80 h-[26rem] flex flex-col justify-center items-center shadow-[0_0_10px_black] rounded-lg relative">
-                    <h1 className="bg-green-500 absolute text-center top-0 w-full py-4 text-2xl font-bold rounded-tl-lg rounded-tr-lg">Payment Successfull</h1>
+  return (
+    <HomeLayout>
+      <Flex align="center" justify="center" className="min-h-[81vh] lg:min-h-[76vh]" px={4}>
+        <Box
+          bg="white"
+          backdropFilter="blur(10px)"
+          borderRadius="lg"
+          boxShadow="lg"
+          maxW="md"
+          w="full"
+          p={8}
+          textAlign="center"
+        >
+          <Heading fontSize="3xl" fontWeight="bold" color="green.400">
+            🎉 Payment Successful!
+          </Heading>
 
-                    <div className="px-4 flex flex-col items-center justify-center space-y-2">
-                        <div className="text-center space-y-2">
-                            <h2 className="text-lg font-semibold">
-                                Welcome to the pro bundle
-                            </h2>
-                            <p className="text-left">
-                                Now you can enjoy all the courses.
-                            </p>
+          <VStack spacing={4} mt={6}>
+            <Icon as={AiFillCheckCircle} boxSize={16} color="green.400" />
+            <Text fontSize="lg">
+              Welcome to the <strong>Pro Bundle</strong>! 🎊 You now have unlimited access to all courses.
+            </Text>
+          </VStack>
 
-                        </div>
-                        <AiFillCheckCircle className="text-green-500 text-5xl" />
-                    </div>
+          <Button
+            mt={6}
+            w="full"
+            colorScheme="green"
+            size="lg"
+            fontSize="xl"
+            fontWeight="bold"
+            _hover={{ transform: "scale(1.05)", transition: "0.2s" }}
+            as={Link}
+            to="/courses"
+          >
+            Go to Dashboard
+          </Button>
+        </Box>
+      </Flex>
 
-                    <Link to="/" className="bg-green-500 hover:bg-green-600 transition-all ease-in-out duration-300 absolute bottom-0 w-full py-2 text-xl font-semibold text-center rounded-br-lg rounded-bl-lg">
-                        <button>Go to dashboard</button>
-                    </Link>
-               
-                </div>
+      {/* 🎁 Success Modal with Goodies */}
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent bg="gray.600" minH="60vh" width="70vw" color="white" borderRadius="lg" position="relative">
+          
+          {/* Close Button (React Icon) */}
+          <IconButton
+            aria-label="Close modal"
+            icon={<AiOutlineClose size={20} />}
+            position="absolute"
+            top={3}
+            right={3}
+            size="sm"
+            variant="ghost"
+            color="white"
+            _hover={{ bg: "gray.700" }}
+            onClick={onClose}
+          />
 
-            </div>
-        </HomeLayout>
-    )
+          <ModalHeader textAlign="center" fontSize="2xl" fontWeight="bold">
+            🏆 Congratulations!
+          </ModalHeader>
+
+          <ModalBody textAlign="center">
+            <Text fontSize="lg">
+              You’ve successfully subscribed to the <strong>Pro Bundle</strong>! 🚀  
+              Enjoy access to all our premium courses.  
+            </Text>
+            <Text fontSize="md" color="green.300" mt={4}>
+              🎁 Your welcome goodies:  
+              <br/>
+              ✅ <strong>Exclusive Learning Resources</strong>  
+              <br/> 
+              ✅ <strong>Priority Support</strong>  
+              <br/> 
+              ✅ <strong>Bonus Study Materials</strong>  
+            </Text>
+
+            <Image src={congrats} alt="Congrats" mt={6} w={200} h={150} borderRadius="3xl" mx="auto" />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="green" w="full" onClick={onClose}>
+              Start Learning 🚀
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </HomeLayout>
+  );
 }
 
 export default CheckoutSuccess;

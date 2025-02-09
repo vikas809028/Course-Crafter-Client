@@ -1,17 +1,12 @@
-/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 import { isValidPassword } from "../../Helpers/regexMatcher";
 import HomeLayout from "../../Layouts/HomeLayout";
-import {
-  changePassword,
-  getUserData,
-  updateProfile,
-} from "../../Redux/Slices/AuthSlice";
+import { changePassword, getUserData } from "../../Redux/Slices/AuthSlice";
 
 function ChangePassword() {
   const dispatch = useDispatch();
@@ -20,6 +15,7 @@ function ChangePassword() {
   const [data, setData] = useState({
     oldPassword: "",
     newPassword: "",
+    confirmNewPassword: "",
   });
 
   function handleInputChange(e) {
@@ -32,14 +28,16 @@ function ChangePassword() {
 
   async function onFormSubmit(e) {
     e.preventDefault();
-    if (!data.oldPassword || !data.newPassword) {
+    if (!data.oldPassword || !data.newPassword || !data.confirmNewPassword) {
       toast.error("All fields are mandatory");
       return;
     }
     if (!isValidPassword(data.newPassword)) {
-      toast.error(
-        "Password should be 6 - 16 character long with atleast a number and special character"
-      );
+      toast.error("Password should be 6 - 16 characters long with at least a number and special character");
+      return;
+    }
+    if (data.newPassword !== data.confirmNewPassword) {
+      toast.error("New password and confirm password do not match");
       return;
     }
 
@@ -51,54 +49,76 @@ function ChangePassword() {
 
   return (
     <HomeLayout>
-      <div className="flex items-center justify-center h-[100vh]">
+      <div className="flex items-center justify-center min-h-[81vh] lg:min-h-[76vh] p-4">
         <form
           onSubmit={onFormSubmit}
-          className="flex flex-col justify-center gap-5 rounded-lg p-4 text-white w-80 min-h-[26rem] shadow-[0_0_10px_black]"
+          className="flex flex-col justify-center gap-6 rounded-lg p-6 w-full max-w-md bg-white shadow-lg backdrop-blur-md border border-gray-200"
         >
-          <h1 className="text-center text-2xl font-semibold">
-            Change Password
-          </h1>
+          <h1 className="text-center text-3xl font-bold text-gray-800">Change Password</h1>
 
-          <div className="flex flex-col gap-1">
-            <label htmlFor="oldPassword" className="text-lg font-semibold">
+          {/* Old Password */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="oldPassword" className="text-lg font-medium text-gray-700">
               Old Password
             </label>
             <input
               required
-              type="text"
+              type="password"
               name="oldPassword"
               id="oldPassword"
-              placeholder="Enter your old Password"
-              className="bg-transparent px-2 py-1 border"
+              placeholder="Enter your old password"
+              className="bg-gray-100 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={data.oldPassword}
               onChange={handleInputChange}
             />
           </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="newPassword" className="text-lg font-semibold">
-              new Password
+
+          {/* New Password */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="newPassword" className="text-lg font-medium text-gray-700">
+              New Password
             </label>
             <input
               required
-              type="text"
+              type="password"
               name="newPassword"
               id="newPassword"
-              placeholder="Enter your new Password"
-              className="bg-transparent px-2 py-1 border"
+              placeholder="Enter your new password"
+              className="bg-gray-100 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={data.newPassword}
               onChange={handleInputChange}
             />
           </div>
+
+          {/* Confirm New Password */}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="confirmNewPassword" className="text-lg font-medium text-gray-700">
+              Confirm New Password
+            </label>
+            <input
+              required
+              type="password"
+              name="confirmNewPassword"
+              id="confirmNewPassword"
+              placeholder="Confirm your new password"
+              className="bg-gray-100 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={data.confirmNewPassword}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-yellow-600 hover:bg-yellow-500 transition-all ease-in-out duration-300 rounded-sm py-2 text-lg cursor-pointer"
+            className="w-full bg-blue-500 hover:bg-blue-600 transition-all duration-300 rounded-md py-2 text-lg font-semibold tracking-wide text-white shadow-md"
           >
-            ChangePassword
+            Change Password
           </button>
+
+          {/* Back to Profile Link */}
           <Link to="/user/profile">
-            <p className="link text-accent cursor-pointer flex items-center justify-center w-full gap-2">
-              <AiOutlineArrowLeft /> Go back to profile
+            <p className="text-gray-600 hover:underline cursor-pointer flex items-center justify-center gap-2 text-sm">
+              <AiOutlineArrowLeft className="text-lg" /> Back to Profile
             </p>
           </Link>
         </form>
