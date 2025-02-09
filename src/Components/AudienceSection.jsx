@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, Text, Box } from "@chakra-ui/react";
-import { NumberTicker } from "@/components/ui/number-ticker";
+import NumberTicker from '../ui/NumberTicker';
 import { FaUserGraduate, FaEye, FaUsers } from "react-icons/fa";
 const AudienceSection = () => {
   return (
