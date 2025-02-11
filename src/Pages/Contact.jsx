@@ -75,7 +75,7 @@ function Contact() {
             boxSize={{ sm: "400px", md: "400px", lg: "550px" }}
             objectFit={"contain"}
             borderRadius={"full"}
-            loading="lazy"
+           
           />
         </Box>
 
