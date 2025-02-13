@@ -72,15 +72,8 @@ function CourseDescription() {
               size="lg"
               onClick={() => {
                 if (state?.numberOfLectures === 0) {
-                  toast({
-                    title: "No Lectures Available",
-                    description:
-                      "There are no lectures available in this course.",
-                    status: "info",
-                    duration: 3000,
-                    isClosable: true,
-                    position: "top",
-                  });
+                  
+                  toast.info("There are no lectures available in this course.");
                   return;
                 }
 
