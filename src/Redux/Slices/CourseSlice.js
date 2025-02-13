@@ -27,7 +27,7 @@ export const getAllCoursesOnHompage = createAsyncThunk("/course/getOnHomepage", 
     const response = axiosInstance.get("/courses");
     return (await response).data.courses;
   } catch (error) {
-    toast.error(error?.response?.data?.message);
+    toast.error("Unable to fetch Courses");
   }
 });
 

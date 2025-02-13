@@ -15,7 +15,7 @@ import HomeLayout from "../../Layouts/HomeLayout";
 import toast from "react-hot-toast";
 
 function CourseDescription() {
-  const toast  = useToast()
+  const toast = useToast();
   const { state } = useLocation();
   const navigate = useNavigate();
   const { role, data } = useSelector((state) => state.auth);
@@ -67,39 +67,49 @@ function CourseDescription() {
             </Flex>
             {/* Action Button */}
             <Button
-      mt={6}
-      colorScheme="orange"
-      size="lg"
-      onClick={() => {
-        if (state?.numberOfLectures === 0) {
-          toast({
-            title: "No Lectures Available",
-            description: "There are no lectures available in this course.",
-            status: "info",
-            duration: 3000,
-            isClosable: true,
-            position: "top",
-          });
-          return; 
-        }
+              mt={6}
+              colorScheme="orange"
+              size="lg"
+              onClick={() => {
+                if (state?.numberOfLectures === 0) {
+                  toast({
+                    title: "No Lectures Available",
+                    description:
+                      "There are no lectures available in this course.",
+                    status: "info",
+                    duration: 3000,
+                    isClosable: true,
+                    position: "top",
+                  });
+                  return;
+                }
 
-        if (role === "ADMIN" || data?.subscription?.status === "active") {
-          navigate("/course/displaylectures", { state: { ...state } });
-        } else {
-          navigate("/checkout");
-        }
-      }}
-      _hover={{ transform: "scale(1.05)" }}
-    >
-      {role === "ADMIN" || data?.subscription?.status === "active"
-        ? "Watch Lectures"
-        : "Enroll Now"}
-    </Button>
+                if (
+                  role === "ADMIN" ||
+                  data?.subscription?.status === "active"
+                ) {
+                  navigate("/course/displaylectures", { state: { ...state } });
+                } else {
+                  navigate("/checkout");
+                }
+              }}
+              _hover={{ transform: "scale(1.05)" }}
+            >
+              {role === "ADMIN" || data?.subscription?.status === "active"
+                ? "Watch Lectures"
+                : "Enroll Now"}
+            </Button>
           </Box>
 
           {/* Right Side: Course Thumbnail with Floating Icons */}
-          <Box flex={1} position="relative" borderRadius={"lg"} textAlign="center">
-            <Image loading="lazy"
+          <Box
+            flex={1}
+            position="relative"
+            borderRadius={"lg"}
+            textAlign="center"
+          >
+            <Image
+              loading="lazy"
               src={state?.thumbnail?.secure_url}
               alt="Course Thumbnail"
               borderRadius="lg"

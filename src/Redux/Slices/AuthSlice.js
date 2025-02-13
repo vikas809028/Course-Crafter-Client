@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-hot-toast";
-
 import axiosInstance from "../../Helpers/axiosInstance";
-
 import { jwtDecode } from "jwt-decode";
+
 
 const tokenExpired = (token) => {
   if (!token || typeof token !== "string" || token.split(".").length !== 3) {
@@ -17,7 +16,7 @@ const tokenExpired = (token) => {
     return decoded.exp < currentTime;
   } catch (error) {
     console.error("Invalid token:", error);
-    return true; // Treat as expired if decoding fails
+    return true;
   }
 };
 

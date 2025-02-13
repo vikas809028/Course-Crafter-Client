@@ -44,7 +44,7 @@ function ChangePassword() {
     await dispatch(changePassword(data));
     await dispatch(getUserData());
 
-    // navigate("/user/profile");
+    navigate("/user/profile");
   }
 
   return (

@@ -74,8 +74,6 @@ export const cancelCourseBundle = createAsyncThunk(
     try {
      
       const response = await axiosInstance.post("/payments/unsubscribe");
-
-      
       toast.promise(
         Promise.resolve(response),
         {
